@@ -1,7 +1,7 @@
 # ProgProj
 Projecto final programação
 
-
+Já recebe e guarda com o nome do ficheiro escolhido
 
 
 
