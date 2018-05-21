@@ -12,4 +12,4 @@ git clone https://github.com/Pacarvalh/ProgProj.git
 ```  
 adicionado
 
-cona larga
+cona apertada
