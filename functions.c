@@ -508,24 +508,15 @@ void putCity(char * _buff,node_t *** _start)
     }
     **_start=getNewNode(data,Temperatura,incerto,pais,city);
         
-    /*tam = strcspn(comma,",\n");
+    /*
+    tam = strcspn(comma,",\n");
     strncpy(auxi->lat,comma,tam);
     comma+=tam+1;
 
     tam = strcspn(comma,",\n");
     strncpy(auxi->logi,comma,tam);
     comma+=tam+1;
-    printf("----%s\n\n",auxi->data);*/
-    
-    
-    /*printf("%.3f\n",auxi->payload.temperatura);
-    printf("%.3f\n",auxi->payload.incerteza);
-    
-    printf("%s\n",auxi->payload.pais);
-    printf("%s\n",auxi->payload.cidade);
-    printf("%s\n",auxi->lat);
-    printf("%s\n\n\n\n",auxi->logi);
-    printf("-------------------\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");*/
+   */
 }
 
 void putCountry(char * _buff,node_t *** _start)
@@ -533,67 +524,63 @@ void putCountry(char * _buff,node_t *** _start)
     char * comma = _buff;
     char au[SIZE_OF_STRING]="";
     char data[SIZE_OF_STRING]="";
-    char s[SIZE_OF_STRING]="-";
+    float Temperatura,incerto;
+    char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="";
     int tam = strcspn(comma,",\n");
   
     
+   
     strncpy(data,comma,tam);
     comma+=tam+1;
-    auxi->payload.dt.ano=atoi(strtok(data,s));
-    auxi->payload.dt.mes=atoi(strtok(data,s));
-    auxi->payload.dt.dia=atoi(strtok(data,s));
     
+
     if ((*comma)==',')
     {
-        auxi->payload.temperatura=NONTEMP;
+        Temperatura=NONTEMP;
         comma++;    
     }
     else 
     {   tam = strcspn(comma,",\n");
         strncpy(au,comma,tam);
-        auxi->payload.temperatura = atof(au);
+        Temperatura = atof(au);
         comma+=tam+1;
     }
     if ((*comma)==',')
-    {   auxi->payload.incerteza=NONTEMP;
+    {   incerto=NONTEMP;
         comma++;
     }
     else
     {
         tam = strcspn(comma,",\n");
         strncpy(au,comma,tam);
-        auxi->payload.incerteza = atof(au);
+        incerto = atof(au);
         comma+=tam+1;
     }
     if ((*comma)==',')
-    {   strcpy(auxi->payload.pais,NONST);
+    {   strcpy(pais,NONST);
         comma++;
     }
     else 
     {   
         tam = strcspn(comma,",\n");
-        strncpy(auxi->payload.pais,comma,tam);
-        /*comma+=tam+1;*/
+        strncpy(pais,comma,tam);
+        comma+=tam+1;
     }
-   /* printf("----%s\n\n",auxi->data);
-    
-    
-    printf("%.3f\n",auxi->payload.temperatura);
-    printf("%.3f\n",auxi->payload.incerteza);
-    
-    printf("%s\n",auxi->payload.pais);
-    
-    printf("-------------------\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");*/
-  
-        
-
-    
-    **_start=auxi;
-
+    if ((*comma)==',')
+    {   strcpy(city,NONST);
+        comma++;
+    }
+    else
+    {
+        tam = strcspn(comma,",\n");
+        strncpy(city,comma,tam);
+        comma+=tam+1;
+    }
+    **_start=getNewNode(data,Temperatura,incerto,pais,city);
 }
 
 int checkChoice(char *chchoi)
-{   if (strcmp(chchoi,"tempcities.csv")==0)
+{  /* if (strcmp(chchoi,"tempcities.csv")==0)
     {
         return 1;
     }
@@ -605,41 +592,37 @@ int checkChoice(char *chchoi)
     else
     {
         return 0;
-
-    }
+    }*/
 }
 
 void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao)
 {
     int aux1=0, aux2=0;
-    for( i=0 , i<= argc, i++)
+    int i;
+    for( i=0 ; i<= argc; i++)
     {
-        if(strcmp(argv[i],"-t"== 0)
+        if(strcmp(argv[i],"-t"== 0))
         {
-            *modeImpressao=2;
+            *modoImpressao=2;
             aux1=1;
 
         }
 
-        else if(strcmp(argv[i],"-g"== 0)
+        else if(strcmp(argv[i],"-g"== 0))
         {
-            *modeImpressao=1;
+            *modoImpressao=1;
             aux2=1;
 
         }
 
-        else if(strcmp(argv[i],"-f1"== 0)
+        else if(strcmp(argv[i],"-f1"== 0))
         {
-            *Cidade = fopen(argv[i+1], "r");
-            i++
-
+            *Cidade = fopen(argv[(i++)+1], "r");
         }
 
-        else if(strcmp(argv[i],"-f2"== 0)
+        else if(strcmp(argv[i],"-f2"== 0))
         {
-            *Paises = fopen(argv[i+1], "r");
-            i++
-
+            *Paises = fopen(argv[(i++)+1], "r");
         }
     }
     if (aux1=1 && aux2 ==1)
@@ -656,7 +639,7 @@ node_t *insertHead(node_t *_head)  /* novos valores e preciso colocalos nas estr
 {
     node_t *newValues=NULL;
 
-    newValues=getNewNode();   /* colocar argumentos*/
+   /* newValues=getNewNode();*/   /* colocar argumentos*/
 
     if(_head ==NULL)
     {
