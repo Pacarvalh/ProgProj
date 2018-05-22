@@ -14,7 +14,10 @@ void switchMenu(void)
     int idxMenu=1 ;
     char buff[SIZE_OF_STRING];
     char nomeCidade[SIZE_OF_STRING], nomePais[SIZE_OF_STRING];
- 
+    receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao)   /* os files que ela muda sao os files a ser usados posteriormente
+    getfile(node_t ** start_,FILE * file,1);   /* falta preencher o primeiro parametro */
+    getfile(node_t ** start_,FILE * file,2);
+
     while(idxMenu==1)
     {
        
@@ -22,7 +25,7 @@ void switchMenu(void)
         switch (idxMenu)
         {
             case 1:
-            menuFiltragem();
+            menuFiltragem();                      
                    
             break;
 
@@ -270,16 +273,17 @@ void menuGlobalAnalise(char _nomePais[], char _nomeCidade[])
     }
 }
 
-
-
  
 void filtragem(node_t *_filtrar, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem) /* talvez usar lista newNodeliar*/
 { 
     node_t *aux=NULL;
+
+    
     
     if(_idxFiltragem==1)
     {
-            /*voltar a encher lista funcao q faz isso*/
+        getfile(node_t ** start_,FILE * file,1);   /* falta preencher o primeiro parametro */
+        getfile(node_t ** start_,FILE * file,2);
     }
     if(_idxFiltragem==2)
     {
@@ -289,7 +293,7 @@ void filtragem(node_t *_filtrar, int _fmes, int _fano, int _primeiroMes, int _ul
             free(aux);
         }
 
-        if( (_filtrar->payload.dt.ano)  ==_fano && (_filtrar->payload.dt.mes)<_fmes)
+        if( (_filtrar->payload.dt.ano) == _fano && _filtrar->payload.dt.mes<_fmes)
         {
             aux = _filtrar;
             free(aux);
@@ -378,7 +382,7 @@ void globalAnalise(int _nMeses)
 
 
 
-node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *city) /* novos valores preciso colocar nas estruturas*/
+node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *city, char *lati, char *longi) /* novos valores preciso colocar nas estruturas*/
 {
     node_t * newNode = (node_t*) malloc(sizeof(node_t));
     char s[SIZE_OF_STRING]="-";
@@ -395,12 +399,15 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
     newNode->payload.incerteza=incerto;
     strcpy(newNode->payload.pais,pais);
     strcpy(newNode->payload.cidade,city);
+    strcpy(newNode->payload.lat,lati);
+    strcpy(newNode->payload.long,longi);
 
     newNode->next = NULL;
     newNode->prev = NULL;
 
     return newNode;
 }
+
 
 void getfile(node_t ** start_,FILE * file,int choi)
 {   char buffer[SIZE_OF_STRING];
@@ -418,24 +425,25 @@ void getfile(node_t ** start_,FILE * file,int choi)
             case 2:
                 printf("case2");
                 putCountry(buffer,&start_);
+                ordenarLista(node_t *_newElem, node_t *_head);
                 break;
         }
     }
+    
+
 
 }
 
-int putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
+
+node_t *putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
 {   
     char * comma = _buff;
     float Temperatura,incerto;
-    char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="";
+    char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="", latitude[ SIZE_OF_STRING] = "", longitude [SIZE_OF_STRING] = "";
     char au[SIZE_OF_STRING]="";
     
     char data[SIZE_OF_STRING]="";
     int tam = strcspn(comma,",\n");
-    
-    
-    
     
     strncpy(data,comma,tam);
     
@@ -497,21 +505,20 @@ int putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na list
         if(city ==NULL)
     }
 
+        
+    
+    tam = strcspn(comma,",\n");
+    strncpy(latitude,comma,tam);
+    comma+=tam+1;
+
+    tam = strcspn(comma,",\n");
+    strncpy(longitude,comma,tam);
+    comma+=tam+1;
 
     **_start=getNewNode(data,Temperatura,incerto,pais,city);
-
-    return 1;
-        
-    /*
-    tam = strcspn(comma,",\n");
-    strncpy(newNode->lat,comma,tam);
-    comma+=tam+1;
-
-    tam = strcspn(comma,",\n");
-    strncpy(newNode->logi,comma,tam);
-    comma+=tam+1;
-   */
+    return  **_start;        /*verificar numero de  ** */
 }
+
 
 void putCountry(char * _buff,node_t *** _start)
 {  
@@ -573,8 +580,9 @@ void putCountry(char * _buff,node_t *** _start)
     **_start=getNewNode(data,Temperatura,incerto,pais,city);
 }
 
-int checkChoice(char *chchoi)
-{  /* if (strcmp(chchoi,"tempcities.csv")==0)
+
+  /*    int checkChoice(char *chchoi)
+{   if (strcmp(chchoi,"tempcities.csv")==0)
     {
         return 1;
     }
@@ -586,8 +594,10 @@ int checkChoice(char *chchoi)
     else
     {
         return 0;
-    }*/
-}
+    }
+}  */
+
+
 
 void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao)
 {
@@ -626,6 +636,72 @@ void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *m
     }
 
 }
+
+
+void ordenarLista(node_t *newElem, node_t *_head)
+{
+    node_t *aux = *_head;
+
+    
+    if( newElem->payload.dt.ano <  *_head->payload.dt.ano  || ( newElem->payload.dt.mes <  *_head->payload.dt.mes  &&  newElem->payload.dt.ano == *_head->payload.dt.ano  ))
+    {
+
+           newElem->next = *_head;
+           *_head = newElem;
+            return;
+    }
+    else 
+    {
+        while( aux->next != NULL)
+        {
+           if( newElem->payload.dt.ano <  aux->next.payload.dt.ano  &&  newElem->payload.dt.mes <  aux->next.payload.dt.mes)
+                {
+                    newElem->next = aux->next;
+                    newElem->prev = aux;
+                    aux->next = newElem;
+                    aux->next->prev = newElem;
+                }
+            aux = aux->next;
+        }
+
+        if(aux->next == NULL)
+        {
+            aux->next=newElem;
+            newElem->prev = aux;
+            newElem-> next = NULL;
+        }
+    }  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
