@@ -8,10 +8,10 @@ typedef struct {
     int ano;
 } data;
 
-typedef struct {
+/*typedef struct {
     float angle;
-    int hemisferio;
-} geo_coord;
+    char cardeais;
+} geo_coord;*/
 
 typedef struct {
     data dt;
@@ -19,8 +19,8 @@ typedef struct {
     float incerteza;
     char pais[100];
     char cidade[100];
-    geo_coord lat;
-    geo_coord longit;
+    char * lat[100];
+    char * longit[100];
 
 } dados_temp;
 
