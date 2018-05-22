@@ -273,7 +273,7 @@ void menuGlobalAnalise(char _nomePais[], char _nomeCidade[])
 
 
  
-void filtragem(node_t *_filtrar, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem) /* talvez usar lista auxiliar*/
+void filtragem(node_t *_filtrar, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem) /* talvez usar lista newNodeliar*/
 { 
     node_t *aux=NULL;
     
@@ -343,11 +343,11 @@ void temperaturas(node_t *_temperaturas, int idxTemperaturas,int periodoAmostrag
     }
 }
 
-void anoAnalise(node_t *_analise, int _idxAnoAnalise, int anoPretendido, int _nCidades, int _nPaises) /* talvez usar lista auxiliar e e ficheiro dos paises*/
+void anoAnalise(node_t *_analise, int _idxAnoAnalise, int _anoPretendido, int _nCidades, int _nPaises) /* talvez usar lista newNodeliar e e ficheiro dos paises*/
 {
     node_t *aux=(node_t*) malloc(sizeof(node_t));
     
-    if(  (_analise->payload.dt.ano) != anoPretendido)
+    if(  (_analise->payload.dt.ano) != _anoPretendido)
     {
         aux = _analise;
         free(aux); 
@@ -378,53 +378,28 @@ void globalAnalise(int _nMeses)
 
 
 
-
-
-
-/*void lerFicheiros(FILE *Cidades, FILE *Paises)
-{
-    char buff[SIZE_OF_STRING];
-    char data [SIZE_OF_STRING];
-    const char virgula [SIZE_OF_STRING]= ",";
-
-    while(fgets(buff, SIZE_OF_STRING,(FILE*)Cidades)!=NULL )
-    {
-        node_t *newElem =NULL;
-
-        newElem = getNewNode();
-
-
-        
-        
-
-            
-    }
-            
-}*/
-
-
 node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *city) /* novos valores preciso colocar nas estruturas*/
 {
-    node_t * auxi = (node_t*) malloc(sizeof(node_t));
+    node_t * newNode = (node_t*) malloc(sizeof(node_t));
     char s[SIZE_OF_STRING]="-";
-    if(auxi==NULL)
+    if(newNode==NULL)
     {
         printf("memory allocation error \n");
         exit(EXIT_FAILURE);
     }
 
-    auxi->payload.dt.ano=atoi(strtok(data,s));
-    auxi->payload.dt.mes=atoi(strtok(NULL,s));
-    auxi->payload.dt.dia=atoi(strtok(NULL,s));
-    auxi->payload.temperatura=Temperatura;
-    auxi->payload.incerteza=incerto;
-    strcpy(auxi->payload.pais,pais);
-    strcpy(auxi->payload.cidade,city);
+    newNode->payload.dt.ano=atoi(strtok(data,s));
+    newNode->payload.dt.mes=atoi(strtok(NULL,s));
+    newNode->payload.dt.dia=atoi(strtok(NULL,s));
+    newNode->payload.temperatura=Temperatura;
+    newNode->payload.incerteza=incerto;
+    strcpy(newNode->payload.pais,pais);
+    strcpy(newNode->payload.cidade,city);
 
-    auxi->next = NULL;
-    auxi->prev = NULL;
+    newNode->next = NULL;
+    newNode->prev = NULL;
 
-    return auxi;
+    return newNode;
 }
 
 void getfile(node_t ** start_,FILE * file,int choi)
@@ -449,8 +424,8 @@ void getfile(node_t ** start_,FILE * file,int choi)
 
 }
 
-void putCity(char * _buff,node_t *** _start)
-{   node_t * auxi = (node_t*) malloc(sizeof(node_t));
+int putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
+{   
     char * comma = _buff;
     float Temperatura,incerto;
     char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="";
@@ -460,24 +435,32 @@ void putCity(char * _buff,node_t *** _start)
     int tam = strcspn(comma,",\n");
     
     
+    
+    
     strncpy(data,comma,tam);
+    
+    
     comma+=tam+1;
     
 
     if ((*comma)==',')
     {
         Temperatura=NONTEMP;
-        comma++;    
+        return 0;   
     }
     else 
     {   tam = strcspn(comma,",\n");
         strncpy(au,comma,tam);
         Temperatura = atof(au);
         comma+=tam+1;
+        if(Temperatura > 70 || Temperatura < -70 )
+            return 0;
+
     }
     if ((*comma)==',')
     {   incerto=NONTEMP;
-        comma++;
+        comma++; 
+            return 0;  
     }
     else
     {
@@ -485,42 +468,53 @@ void putCity(char * _buff,node_t *** _start)
         strncpy(au,comma,tam);
         incerto = atof(au);
         comma+=tam+1;
+        /* verificar valor aceitavel */
+        if(incerto > 3)
+        return 0;
     }
     if ((*comma)==',')
     {   strcpy(pais,NONST);
         comma++;
+        return 0;
     }
     else 
     {   
         tam = strcspn(comma,",\n");
         strncpy(pais,comma,tam);
         comma+=tam+1;
+
     }
     if ((*comma)==',')
     {   strcpy(city,NONST);
         comma++;
+        return 0
     }
     else
     {
         tam = strcspn(comma,",\n");
         strncpy(city,comma,tam);
         comma+=tam+1;
+        if(city ==NULL)
     }
+
+
     **_start=getNewNode(data,Temperatura,incerto,pais,city);
+
+    return 1;
         
     /*
     tam = strcspn(comma,",\n");
-    strncpy(auxi->lat,comma,tam);
+    strncpy(newNode->lat,comma,tam);
     comma+=tam+1;
 
     tam = strcspn(comma,",\n");
-    strncpy(auxi->logi,comma,tam);
+    strncpy(newNode->logi,comma,tam);
     comma+=tam+1;
    */
 }
 
 void putCountry(char * _buff,node_t *** _start)
-{   node_t * auxi = (node_t*) malloc(sizeof(node_t));
+{  
     char * comma = _buff;
     char au[SIZE_OF_STRING]="";
     char data[SIZE_OF_STRING]="";
