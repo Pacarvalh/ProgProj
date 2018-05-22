@@ -14,9 +14,12 @@ void switchMenu(void)
     int idxMenu=1 ;
     char buff[SIZE_OF_STRING];
     char nomeCidade[SIZE_OF_STRING], nomePais[SIZE_OF_STRING];
-    receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao)   /* os files que ela muda sao os files a ser usados posteriormente
-    getfile(node_t ** start_,FILE * file,1);   /* falta preencher o primeiro parametro */
-    getfile(node_t ** start_,FILE * file,2);
+    FILE * Cidade,*Paises;
+    node_t * start=NULL;
+
+    receberDados(argc , argv, &Cidade, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
+    getfile(&start,Cidade,1);   /* falta preencher o primeiro parametro */
+    getfile(&start,Paises,2);
 
     while(idxMenu==1)
     {
@@ -282,8 +285,8 @@ void filtragem(node_t *_filtrar, int _fmes, int _fano, int _primeiroMes, int _ul
     
     if(_idxFiltragem==1)
     {
-        getfile(node_t ** start_,FILE * file,1);   /* falta preencher o primeiro parametro */
-        getfile(node_t ** start_,FILE * file,2);
+       /* getfile(node_t ** start_,FILE * file,1); */  /* falta preencher o primeiro parametro */
+        /*getfile(node_t ** start_,FILE * file,2);*/
     }
     if(_idxFiltragem==2)
     {
@@ -382,7 +385,7 @@ void globalAnalise(int _nMeses)
 
 
 
-node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *city, char *lati, char *longi) /* novos valores preciso colocar nas estruturas*/
+node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *city, char *lati, char *longi,int choi) /* novos valores preciso colocar nas estruturas*/
 {
     node_t * newNode = (node_t*) malloc(sizeof(node_t));
     char s[SIZE_OF_STRING]="-";
@@ -398,13 +401,15 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
     newNode->payload.temperatura=Temperatura;
     newNode->payload.incerteza=incerto;
     strcpy(newNode->payload.pais,pais);
-    strcpy(newNode->payload.cidade,city);
-    strcpy(newNode->payload.lat,lati);
-    strcpy(newNode->payload.long,longi);
-
+    if (choi==1){ /*só entra se estiver na cidade,fica definido que a escolha 1 é cidade*/
+        strcpy(newNode->payload.cidade,city);
+        strcpy(newNode->payload.lat,lati);
+        strcpy(newNode->payload.longit,longi);
+    }
     newNode->next = NULL;
     newNode->prev = NULL;
 
+    
     return newNode;
 }
 
@@ -419,13 +424,15 @@ void getfile(node_t ** start_,FILE * file,int choi)
         switch (choi)
         {   case 1:
                 printf("case1");
-                putCity(buffer,&start_);
+                putCity(buffer,&start_,choi);
+                
                 break;
                 /* o q e q e suposto fazer?*/
             case 2:
                 printf("case2");
-                putCountry(buffer,&start_);
-                ordenarLista(node_t *_newElem, node_t *_head);
+                putCity(buffer,&start_,choi);/*Não te preocupes com o nome estar ser putCity, a funçao dá para os dois*/
+                 
+                /*ordenarLista(node_t *_newElem, node_t *_head);*/
                 break;
         }
     }
@@ -435,19 +442,16 @@ void getfile(node_t ** start_,FILE * file,int choi)
 }
 
 
-node_t *putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
+node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
 {   
     char * comma = _buff;
     float Temperatura,incerto;
     char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="", latitude[ SIZE_OF_STRING] = "", longitude [SIZE_OF_STRING] = "";
     char au[SIZE_OF_STRING]="";
-    
     char data[SIZE_OF_STRING]="";
+   
     int tam = strcspn(comma,",\n");
-    
     strncpy(data,comma,tam);
-    
-    
     comma+=tam+1;
     
 
@@ -495,14 +499,14 @@ node_t *putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na 
     if ((*comma)==',')
     {   strcpy(city,NONST);
         comma++;
-        return 0
+        return 0;
     }
     else
     {
         tam = strcspn(comma,",\n");
         strncpy(city,comma,tam);
         comma+=tam+1;
-        if(city ==NULL)
+        
     }
 
         
@@ -515,89 +519,15 @@ node_t *putCity(char * _buff,node_t *** _start)  /* se der return a 1, entra na 
     strncpy(longitude,comma,tam);
     comma+=tam+1;
 
-    **_start=getNewNode(data,Temperatura,incerto,pais,city);
+    **_start=getNewNode(data,Temperatura,incerto,pais,city,latitude,longitude,choi);
     return  **_start;        /*verificar numero de  ** */
 }
 
 
-void putCountry(char * _buff,node_t *** _start)
-{  
-    char * comma = _buff;
-    char au[SIZE_OF_STRING]="";
-    char data[SIZE_OF_STRING]="";
-    float Temperatura,incerto;
-    char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="";
-    int tam = strcspn(comma,",\n");
-  
-    
-   
-    strncpy(data,comma,tam);
-    comma+=tam+1;
-    
-
-    if ((*comma)==',')
-    {
-        Temperatura=NONTEMP;
-        comma++;    
-    }
-    else 
-    {   tam = strcspn(comma,",\n");
-        strncpy(au,comma,tam);
-        Temperatura = atof(au);
-        comma+=tam+1;
-    }
-    if ((*comma)==',')
-    {   incerto=NONTEMP;
-        comma++;
-    }
-    else
-    {
-        tam = strcspn(comma,",\n");
-        strncpy(au,comma,tam);
-        incerto = atof(au);
-        comma+=tam+1;
-    }
-    if ((*comma)==',')
-    {   strcpy(pais,NONST);
-        comma++;
-    }
-    else 
-    {   
-        tam = strcspn(comma,",\n");
-        strncpy(pais,comma,tam);
-        comma+=tam+1;
-    }
-    if ((*comma)==',')
-    {   strcpy(city,NONST);
-        comma++;
-    }
-    else
-    {
-        tam = strcspn(comma,",\n");
-        strncpy(city,comma,tam);
-        comma+=tam+1;
-    }
-    **_start=getNewNode(data,Temperatura,incerto,pais,city);
-}
 
 
-  /*    int checkChoice(char *chchoi)
-{   if (strcmp(chchoi,"tempcities.csv")==0)
-    {
-        return 1;
-    }
-    else if(strcmp(chchoi,"tempcountries.csv")==0)
-    {
-        return 2;
 
-    }
-    else
-    {
-        return 0;
-    }
-}  */
-
-
+ 
 
 void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao)
 {
@@ -640,7 +570,8 @@ void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *m
 
 void ordenarLista(node_t *newElem, node_t *_head)
 {
-    node_t *aux = *_head;
+    node_t *aux = NULL;
+    aux=_head;
 
     
     if( newElem->payload.dt.ano <  *_head->payload.dt.ano  || ( newElem->payload.dt.mes <  *_head->payload.dt.mes  &&  newElem->payload.dt.ano == *_head->payload.dt.ano  ))
@@ -676,40 +607,11 @@ void ordenarLista(node_t *newElem, node_t *_head)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 node_t *insertHead(node_t *_head)  /* novos valores e preciso colocalos nas estruturas*/
 {
     node_t *newValues=NULL;
 
-   /* newValues=getNewNode();*/   /* colocar argumentos*/
+    newValues=getNewNode();   /* colocar argumentos*/
 
     if(_head ==NULL)
     {

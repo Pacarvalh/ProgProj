@@ -19,8 +19,8 @@ typedef struct {
     float incerteza;
     char pais[100];
     char cidade[100];
-    char * lat[100];
-    char * longit[100];
+    char lat[100];
+    char longit[100];
 
 } dados_temp;
 
