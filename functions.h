@@ -19,6 +19,11 @@ void globalAnalise(int _nMeses);
 void getfile(node_t **,FILE *,int);
 node_t *putCity(char *,node_t ***,int);
 node_t *getNewNode(char *,float,float,char *,char *,char *,char*,int);
+void ordenarLista(node_t *, node_t ****);
+void separa(node_t *,node_t *,node_t *);
+void merge(node_t *);
+node_t *junta(node_t *,node_t *);
+void printlist(node_t *);
 
 
 #endif

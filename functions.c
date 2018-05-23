@@ -15,12 +15,14 @@ void switchMenu(int argc, char *argv[])
     char buff[SIZE_OF_STRING];
     char nomeCidade[SIZE_OF_STRING], nomePais[SIZE_OF_STRING];
     FILE *Cidades=NULL, *Paises=NULL;
-    node_t * start=NULL;
+    node_t * startc=NULL;
+    node_t * startp=NULL;
     int modoImpressao;
-
-    receberDados(argc , argv, &Cidades, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
-    getfile(&start,Cidades,1);   /* falta preencher o primeiro parametro */
-    getfile(&start,Paises,2);
+    Cidades=fopen("tempcities.csv","r");
+Paises=fopen("tempcountries_short.csv","r");
+   // receberDados(argc , argv, &Cidades, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
+    getfile(&startc,Cidades,1);   /* falta preencher o primeiro parametro */
+    getfile(&startp,Paises,2);
 
     while(idxMenu==1)
     {
@@ -286,7 +288,7 @@ void filtragem(node_t *_filtrar, int _fmes, int _fano, int _primeiroMes, int _ul
     
     if(_idxFiltragem==1)
     {
-       /* getfile(node_t ** start_,FILE * file,1); */  /* falta preencher o primeiro parametro */
+       /* getfile(node_t ** start_,FILE * file,1);*/  /* falta preencher o primeiro parametro */
         /*getfile(node_t ** start_,FILE * file,2);*/
     }
     if(_idxFiltragem==2)
@@ -390,25 +392,36 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
 {
     node_t * newNode = (node_t*) malloc(sizeof(node_t));
     char s[SIZE_OF_STRING]="-";
+    //char a[SIZE_OF_STRING]="",b[SIZE_OF_STRING]="",c[SIZE_OF_STRING]="";
+    int a,b,c;
+    a=atoi(strtok(data,s));
+    b=atoi(strtok(NULL,s));
+    c=atoi(strtok(NULL,s));
+            
+
+    /*printf("data----%d---%d---%d\n",a,b,c);*/
+     
     if(newNode==NULL)
     {
         printf("memory allocation error \n");
         exit(EXIT_FAILURE);
     }
-
-    newNode->payload.dt.ano=atoi(strtok(data,s));
-    newNode->payload.dt.mes=atoi(strtok(NULL,s));
-    newNode->payload.dt.dia=atoi(strtok(NULL,s));
+   /* printf("52\n");*/
+   
+    newNode->payload.dt.ano=a;
+    newNode->payload.dt.mes=b;
+    newNode->payload.dt.dia=c;
     newNode->payload.temperatura=Temperatura;
     newNode->payload.incerteza=incerto;
     strcpy(newNode->payload.pais,pais);
+   // printf("")
     if (choi==1){ /*só entra se estiver na cidade,fica definido que a escolha 1 é cidade*/
         strcpy(newNode->payload.cidade,city);
         strcpy(newNode->payload.lat,lati);
         strcpy(newNode->payload.longit,longi);
     }
-    newNode->next = NULL;
-    newNode->prev = NULL;
+   /* newNode->next = NULL;
+    newNode->prev = NULL;*/
 
     
     return newNode;
@@ -418,19 +431,20 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
 void getfile(node_t ** start_,FILE * file,int choi)
 {   char buffer[SIZE_OF_STRING];
     int i=0;
-    fgets(buffer,SIZE_OF_STRING,file);  
+    if(choi==1)
+        fgets(buffer,SIZE_OF_STRING,file);  
     while(fgets(buffer,SIZE_OF_STRING,file))
-    {   if (i++>10)
-        {break;}
+    {  /* if (i++>10)
+        {break;}*/
         switch (choi)
         {   case 1:
-                printf("case1");
+                /*printf("case1\n");*/
                 putCity(buffer,&start_,choi);
                 
                 break;
                 /* o q e q e suposto fazer?*/
             case 2:
-                printf("case2");
+                /*printf("case2\n");*/
                 putCity(buffer,&start_,choi);/*Não te preocupes com o nome estar ser putCity, a funçao dá para os dois*/
                  
                 /*ordenarLista(node_t *_newElem, node_t *_head);*/
@@ -450,11 +464,11 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
     char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="", latitude[ SIZE_OF_STRING] = "", longitude [SIZE_OF_STRING] = "";
     char au[SIZE_OF_STRING]="";
     char data[SIZE_OF_STRING]="";
-   
-    int tam = strcspn(comma,",\n");
+    static int i=0;
+    long int tam = strcspn(comma,",\n");
     strncpy(data,comma,tam);
     comma+=tam+1;
-    
+     
 
     if ((*comma)==',')
     {
@@ -519,11 +533,25 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
     tam = strcspn(comma,",\n");
     strncpy(longitude,comma,tam);
     comma+=tam+1;
+    /*printf("%d\n\n",i++);*/
+    if(strcmp(pais,"country")==0)
+        return 0;
 
-
+   //printf("177\n");
+    
     auxi=getNewNode(data,Temperatura,incerto,pais,city,latitude,longitude,choi);
-    printf("%s",auxi->payload.pais);
-    if(**_start ==NULL)
+    /*printf("%d\n",auxi->payload.dt.ano);
+    printf("%d\n",auxi->payload.dt.mes);
+    printf("%d\n",auxi->payload.dt.dia);
+    printf("%f\n",auxi->payload.temperatura);
+    printf("%f\n",auxi->payload.incerteza);
+    printf("%s\n",auxi->payload.pais);
+   printf("%s\n",auxi->payload.cidade);
+    printf("%s\n",auxi->payload.lat);
+    printf("%s\n",auxi->payload.longit);
+*/  //printf("%d\n\n\n\n\n",i++);
+  if(choi==1)
+  { if(**_start ==NULL)
     {
         **_start = auxi;
         auxi->prev = NULL;
@@ -531,12 +559,28 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
         
     }
     auxi->next = **_start;
-    auxi -> prev = NULL;
+    auxi-> prev = NULL;
     **_start = auxi;
+  }
+   /*if(!**_start)
+    **_start=auxi;
+    else
+    {
+        auxi->next=**_start;
+        auxi->next->prev=auxi;
+        **_start=auxi;
 
+
+    }  */
+   if (choi==2)
+    ordenarLista(auxi, &_start);
+   
     
     return  **_start;        /*verificar numero de  ** */
 }
+
+
+
 
 
 
@@ -583,44 +627,39 @@ void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *m
 }
 
 
-/*void ordenarLista(node_t *newElem, node_t *_head)
-{
-    node_t *aux = NULL;
-    aux=_head;
-
-    
-    if( newElem->payload.dt.ano <  *_head->payload.dt.ano  || ( newElem->payload.dt.mes <  *_head->payload.dt.mes  &&  newElem->payload.dt.ano == *_head->payload.dt.ano  ))
+void ordenarLista(node_t *newElem, node_t ****_start)
+{   static int i=0;
+    node_t * current;
+    //printf("safef");
+    //printf("%d",i++);*/
+    if ((i++)==50 ||i==1000 ||i==5000|| i==10000 || i==40000)
+        printf("%d\n",i);
+   if(***_start==NULL)
+        ***_start=newElem;
+    else if((***_start)->payload.dt.ano>newElem->payload.dt.ano || ((***_start)->payload.dt.ano==newElem->payload.dt.ano && (***_start)->payload.dt.mes>newElem->payload.dt.mes))
     {
-
-           newElem->next = *_head;
-           *_head = newElem;
-            return;
+        newElem->next = ***_start;
+        newElem->next->prev=newElem;
+        ***_start=newElem;
     }
-    else 
-    {
-        while( aux->next != NULL)
-        {
-           if( newElem->payload.dt.ano <  aux->next.payload.dt.ano  &&  newElem->payload.dt.mes <  aux->next.payload.dt.mes)
-                {
-                    newElem->next = aux->next;
-                    newElem->prev = aux;
-                    aux->next = newElem;
-                    aux->next->prev = newElem;
-                }
-            aux = aux->next;
-        }
 
-        if(aux->next == NULL)
-        {
-            aux->next=newElem;
-            newElem->prev = aux;
-            newElem-> next = NULL;
-        }
-    }  
+    else{
+        current = ***_start;
+        while (current->next !=NULL && (current->next->payload.dt.ano<newElem->payload.dt.ano|| (current->next->payload.dt.ano==newElem->payload.dt.ano && current->next->payload.dt.mes<newElem->payload.dt.mes)))
+            current = current->next;
+
+        newElem->next = current->next;
+
+        if (current->next!=NULL)
+            newElem->next->prev = newElem;
+        
+        current->next = newElem;
+        newElem->prev = current;
+    }
 }
 
 
-*/
+
 
 /*node_t *insertHead(node_t *_head) */ /* novos valores e preciso colocalos nas estruturas*/
 /*{

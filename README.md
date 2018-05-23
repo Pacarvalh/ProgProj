@@ -12,4 +12,6 @@ git clone https://github.com/Pacarvalh/ProgProj.git
 ```  
 adicionado
 
-cona apertada
+O ficheiro ta funcionar, e a ordenação também
+Tem de se utilizar o ficheiro mais pequeno porque o sort demora imenso, agora a demorar 1min
+
