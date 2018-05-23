@@ -24,7 +24,7 @@ Paises=fopen("tempcountries_short.csv","r");
     getfile(&startc,Cidades,1);   /* falta preencher o primeiro parametro */
     getfile(&startp,Paises,2);
 
-    while(idxMenu==1)
+    while(idxMenu==1 )
     {
        
         menuPrincipal(&idxMenu);

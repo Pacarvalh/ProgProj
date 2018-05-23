@@ -20,15 +20,31 @@ void switchMenu(int argc, char *argv[])
 
     int modoImpressao;
    
-Cidades=fopen("tempcities.csv","r");
+Cidades=fopen("tempcities_short.csv","r");
 Paises=fopen("tempcountries_short.csv","r");/*tempcountries.csv"*/
 
   /* receberDados(argc , argv, &Cidades, &Paises, modoImpressao); */  /* os files que ela muda sao os files a ser usados posteriormente*/
  getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
-   //getfile(&startp,Paises,2);
-   printf("entra merge");
+ // getfile(&startp,Paises,2);
+
+
+  
 // merge(startp);
+ 
+ if(0==1)
+    {
+     getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
+   getfile(&startp,Paises,2);
+    }
+      printf("efwg");
+  fflush(stdout);
+//filtragem(&startc, 9, 2012,3, 5, 2);
+  printf("1234");
+  fflush(stdout);
+   
 printlist(startc);
+  printf("1234");
+  fflush(stdout);
 
     
 }
@@ -55,7 +71,7 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
     c=atoi(strtok(NULL,s));
             
 
-    /*printf("data----%d---%d---%d\n",a,b,c);*/
+    //printf("data----%d---%d---%d\n",a,b,c);
      
     if(newNode==NULL)
     {
@@ -76,8 +92,8 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
         strcpy(newNode->payload.lat,lati);
         strcpy(newNode->payload.longit,longi);
     }
-   /* newNode->next = NULL;
-    newNode->prev = NULL;*/
+    newNode->next = NULL;
+    newNode->prev = NULL;
 
     
     return newNode;
@@ -87,11 +103,12 @@ node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *c
 void getfile(node_t ** start_,FILE * file,int choi)
 {   char buffer[SIZE_OF_STRING];
     int i=0;
-    if(choi==1)
-        fgets(buffer,SIZE_OF_STRING,file);  
+    
+     fgets(buffer,SIZE_OF_STRING,file);  
+     //fgets(buffer,SIZE_OF_STRING,file); 
     while(fgets(buffer,SIZE_OF_STRING,file))
-    {  /* if (i++>10)
-        {break;}*/
+    {   if ((i++)>49800)
+        {break;}
         switch (choi)
         {   case 1:
                 /*printf("case1\n");*/
@@ -206,7 +223,7 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
     printf("%s\n",auxi->payload.lat);
     printf("%s\n",auxi->payload.longit);
 */  //printf("%d\n\n\n\n\n",i++);
-  if(choi==1)
+  if(choi==1) /*o erro é aqui*/
   { if(**_start ==NULL)
     {
         **_start = auxi;
@@ -344,15 +361,89 @@ void separa(node_t * _head,node_t * a,node_t * b)
    }
 }
 */
+void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem) /* talvez usar lista newNodeliar*/
+{ 
+    node_t *aux=NULL;
+    node_t *temp=NULL;
+
+    
+    
+
+    if(_idxFiltragem==2)
+    {
+        aux = *_head;
+        
+        while((aux->next->payload.dt.ano)  <  _fano || (aux->next->payload.dt.ano) == _fano && aux->next->payload.dt.mes<_fmes)
+        {
+            temp=aux->next;
+            free(aux);
+            aux = temp;
+            
+        }
+
+        *_head= aux; 
+
+        
+    
+    }
+/*
+    if(_idxFiltragem ==3)
+    {
+
+        aux = *_head;
+        temp=aux;
+        printf("386");
+        fflush(stdout);
+
+        while(temp -> next != NULL)
+        {
+            if(  (temp->payload.dt.mes)  <  (_primeiroMes) || (temp ->payload.dt.mes)  >  (_ultimoMes)  )
+            {
+                printf("loop\n");
+                fflush(stdout);
+                
+                temp=aux;
+                temp->prev->next=temp->next;
+                temp->next->prev=temp->prev;
+                free(aux);
+                printf("after loop\n");
+                fflush(stdout);
+
+            }                
+               
+
+            temp = temp-> next;
+
+        } printf("out of loop\n\n\n\n\n\n\n\n\n");
+                fflush(stdout);
+        while(temp->prev!=NULL)
+            temp=temp->prev;
+
+        
+        *_head= temp; 
+       printf("%s\n",temp->payload.pais);
+       printf("%f\n\n\n\n",temp->payload.temperatura);
+      
+    }*/
+}
+
+
 void printlist(node_t *_start)
-{   node_t * temp = _start;
-static int i;
+{   node_t * temp = (node_t *) malloc(sizeof(node_t));
+    temp = _start;
+static int i=0;/*
 if ((i++)==50 ||i==1000 ||i==5000|| i==10000 || i==40000)
-        printf("%d\n",i);
-    while(_start || _start->next)
+        printf("%d\n",i);*/
+    while( (temp->next!=NULL || temp->next->next!=NULL )/*&&(strcmp(temp->payload.pais,"Country")!=0)*/)
     {
         printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
         temp=temp->next;
-        
-    }
+        printf("\n%d",i++);
+        fflush(stdout);
+        if(temp->next==NULL)
+        {
+            break;
+        }
+    }  
+    
 }
