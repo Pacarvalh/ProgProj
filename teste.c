@@ -24,9 +24,9 @@ Cidades=fopen("tempcities_short.csv","r");
 Paises=fopen("tempcountries_short.csv","r");/*tempcountries.csv"*/
 
   /* receberDados(argc , argv, &Cidades, &Paises, modoImpressao); */  /* os files que ela muda sao os files a ser usados posteriormente*/
- getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
- // getfile(&startp,Paises,2);
-
+ //getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
+  getfile(&startp,Paises,2);
+ startp=merge(startp);
 
   
 // merge(startp);
@@ -42,7 +42,7 @@ Paises=fopen("tempcountries_short.csv","r");/*tempcountries.csv"*/
   printf("1234");
   fflush(stdout);
    
-printlist(startc);
+printlist(startp);
   printf("1234");
   fflush(stdout);
 
@@ -223,17 +223,19 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
     printf("%s\n",auxi->payload.lat);
     printf("%s\n",auxi->payload.longit);
 */  //printf("%d\n\n\n\n\n",i++);
-  if(choi==1) /*o erro é aqui*/
-  { if(**_start ==NULL)
+  if(choi!=0) /*o erro é aqui*/
+  {   auxi->next = **_start;
+    auxi-> prev = NULL;
+    **_start = auxi;
+      
+      if(**_start ==NULL)
     {
         **_start = auxi;
         auxi->prev = NULL;
         auxi -> next = NULL;
         
     }
-    auxi->next = **_start;
-    auxi-> prev = NULL;
-    **_start = auxi;
+  
   }
    /*if(!**_start)
     **_start=auxi;
@@ -245,8 +247,8 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
 
 
     }  */
-   if (choi==2)
-    ordenarLista(auxi, &_start);
+  /* if (choi==2)
+    ordenarLista(auxi, &_start);*/
    
     
     return  **_start;        /*verificar numero de  ** */
@@ -289,78 +291,60 @@ void ordenarLista(node_t *newElem, node_t ****_start)
     }
 }
 
-/*
+
 node_t * junta(node_t * a,node_t * b)
 {
     node_t * jajuntas = NULL;
     static int i=0;
-    printf("\n%d\n",i++);
+    //printf("\n%d\n",i++);
     if(a==NULL)
         return b;
     if (b==NULL)
         return a;
     if((a)->payload.dt.ano<b->payload.dt.ano || (a->payload.dt.ano==b->payload.dt.ano && a->payload.dt.mes<b->payload.dt.mes))
     {
-        jajuntas = a;
-        jajuntas->next=junta(a->next,b);
+        a->next=junta(a->next,b);
+        a->next->prev=a;
+        a->prev=NULL;
+        return a;
     }
     else
-    {
-       jajuntas = b;
-        jajuntas->next=junta(a,b->next);
-    }
-    return jajuntas;
-
-}
-
-void merge(node_t * _start)
-{
-    node_t * head = _start;
-    node_t * a = NULL;
-    node_t * b = NULL;
-    static int i=0;
-    printf("\n%d\n",i++);
-
-    if(head==NULL || head->next==NULL)
-        return;
-    
-    separa(head,a,b);
-    merge(a);
-    merge(b);
-    _start = junta(a,b);
-}
-
-void separa(node_t * _head,node_t * a,node_t * b)
-{
-   node_t * rapido,*lento;
-   node_t *aux;
-    
-   if(_head==NULL || _head->next == NULL)
-   {
-       a = _head;
-       b = NULL;
+    {    b->next=junta(a,b->next);
+        b->next->prev=b;
+        b->prev=NULL;
+        return b;
        
-   }
-   else{
-       lento=_head;
-       rapido = _head->next;
-       while(rapido!=NULL)
-       {
-           rapido = rapido->next;
-           if(rapido!=NULL)
-           {
-               lento=lento->next;
-               rapido=rapido->next;
-           }
+    }
+    
 
-       }
-       a = _head;
-       b=lento->next;
-
-
-   }
 }
-*/
+
+node_t * merge(node_t * _start)
+{
+    if(!_start||!_start->next)
+        return _start;
+
+    node_t * second = separa(_start);
+    _start=merge(_start);
+    second=merge(second);
+    return junta(_start,second);
+}
+
+node_t * separa(node_t * _head)
+{
+   node_t * rapido=_head,*lento=_head;
+  
+    while(rapido->next && rapido->next->next)
+    {
+        rapido = rapido->next->next;
+        lento=lento->next;
+    }
+    node_t * temp = lento->next;
+    lento->next=NULL;
+    return temp;
+   
+}
+
 void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem) /* talvez usar lista newNodeliar*/
 { 
     node_t *aux=NULL;
@@ -438,7 +422,7 @@ if ((i++)==50 ||i==1000 ||i==5000|| i==10000 || i==40000)
     {
         printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
         temp=temp->next;
-        printf("\n%d",i++);
+        //printf("\n%d",i++);
         fflush(stdout);
         if(temp->next==NULL)
         {
