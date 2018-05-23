@@ -15,3 +15,5 @@ adicionado
 O ficheiro ta funcionar, e a ordenação também
 Tem de se utilizar o ficheiro mais pequeno porque o sort demora imenso, agora a demorar 1min
 
+Não percebo o porque de haver duas filtragens(menufiltragem e filtragem) (são os dois menus)
+
