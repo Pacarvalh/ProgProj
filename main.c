@@ -10,7 +10,7 @@ int main (int argc, char *argv[])
 {
     FILE *Cidades=NULL, *Paises=NULL;
     /* Apresenta os menus e pede todos os valores necessarios ao utilizador.*/
-    switchMenu();  
+    switchMenu(argc,argv);  
     return EXIT_SUCCESS;
 }
 

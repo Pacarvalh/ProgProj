@@ -5,7 +5,7 @@
 #include "functions.h"
 #include "data.h"
 
-void switchMenu (void);
+void switchMenu (int argc, char *argv[]);
 int menuPrincipal(int *_idxMenu);
 void menuFiltragem(void);
 void menuTemperaturas(  char _nomePais[], char _nomeCidade[]);

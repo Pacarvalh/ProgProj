@@ -8,17 +8,18 @@
 #define NONTEMP 9999999999
 #define NONST "EMPTY"
 
-void switchMenu(void)
+void switchMenu(int argc, char *argv[])
 {
    
     int idxMenu=1 ;
     char buff[SIZE_OF_STRING];
     char nomeCidade[SIZE_OF_STRING], nomePais[SIZE_OF_STRING];
-    FILE * Cidade,*Paises;
+    FILE *Cidades=NULL, *Paises=NULL;
     node_t * start=NULL;
+    int modoImpressao;
 
-    receberDados(argc , argv, &Cidade, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
-    getfile(&start,Cidade,1);   /* falta preencher o primeiro parametro */
+    receberDados(argc , argv, &Cidades, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
+    getfile(&start,Cidades,1);   /* falta preencher o primeiro parametro */
     getfile(&start,Paises,2);
 
     while(idxMenu==1)
@@ -443,7 +444,7 @@ void getfile(node_t ** start_,FILE * file,int choi)
 
 
 node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
-{   
+{   node_t *auxi =(node_t *) malloc(sizeof(node_t));
     char * comma = _buff;
     float Temperatura,incerto;
     char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="", latitude[ SIZE_OF_STRING] = "", longitude [SIZE_OF_STRING] = "";
@@ -519,7 +520,21 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
     strncpy(longitude,comma,tam);
     comma+=tam+1;
 
-    **_start=getNewNode(data,Temperatura,incerto,pais,city,latitude,longitude,choi);
+
+    auxi=getNewNode(data,Temperatura,incerto,pais,city,latitude,longitude,choi);
+    printf("%s",auxi->payload.pais);
+    if(**_start ==NULL)
+    {
+        **_start = auxi;
+        auxi->prev = NULL;
+        auxi -> next = NULL;
+        
+    }
+    auxi->next = **_start;
+    auxi -> prev = NULL;
+    **_start = auxi;
+
+    
     return  **_start;        /*verificar numero de  ** */
 }
 
@@ -568,7 +583,7 @@ void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *m
 }
 
 
-void ordenarLista(node_t *newElem, node_t *_head)
+/*void ordenarLista(node_t *newElem, node_t *_head)
 {
     node_t *aux = NULL;
     aux=_head;
@@ -605,15 +620,15 @@ void ordenarLista(node_t *newElem, node_t *_head)
 }
 
 
+*/
 
-
-node_t *insertHead(node_t *_head)  /* novos valores e preciso colocalos nas estruturas*/
-{
+/*node_t *insertHead(node_t *_head) */ /* novos valores e preciso colocalos nas estruturas*/
+/*{
     node_t *newValues=NULL;
 
-    newValues=getNewNode();   /* colocar argumentos*/
+    newValues=();  */ /* colocar argumentos*/
 
-    if(_head ==NULL)
+   /* if(_head ==NULL)
     {
         _head = newValues;
         newValues->prev = NULL;
@@ -626,15 +641,15 @@ node_t *insertHead(node_t *_head)  /* novos valores e preciso colocalos nas estr
 
     return newValues;
 }
-
-
+*/
+/*
 node_t insertTail(node_t **_head)  
 {
     node_t *newValues= NULL;
     node_t *aux= NULL;
-    newValues =getNewNode();  /* colocar argumentos*/
+    newValues =getNewNode();*/  /* colocar argumentos*/
 
-    if(*_head == NULL)
+   /* if(*_head == NULL)
     {
         *_head == newValues;
         return;
@@ -646,11 +661,11 @@ node_t insertTail(node_t **_head)
         aux=(aux->next);
     }
 
-    (aux->next)=newValues; /* sera q fica na lista o proximo elemento?*/
+    (aux->next)=newValues;*/ /* sera q fica na lista o proximo elemento?*/
 
-    return *newValues;
+   /* return *newValues;
 
-}
+}*/
 
 
 
