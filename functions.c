@@ -22,7 +22,7 @@ void switchMenu(int argc, char *argv[])
 Paises=fopen("tempcountries_short.csv","r");
    // receberDados(argc , argv, &Cidades, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
     getfile(&startc,Cidades,1);   /* falta preencher o primeiro parametro */
-    getfile(&startp,Paises,2);
+   // getfile(&startp,Paises,2);
 
     while(idxMenu==1 )
     {
