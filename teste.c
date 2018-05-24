@@ -24,8 +24,8 @@ Cidades=fopen("tempcities_short.csv","r");
 Paises=fopen("tempcountries_short.csv","r");/*tempcountries.csv"*/
 
   /* receberDados(argc , argv, &Cidades, &Paises, modoImpressao); */  /* os files que ela muda sao os files a ser usados posteriormente*/
- //getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
-  getfile(&startp,Paises,2);
+ getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
+ // getfile(&startp,Paises,2);
 //startp=merge(startp);
 
   
@@ -38,11 +38,11 @@ Paises=fopen("tempcountries_short.csv","r");/*tempcountries.csv"*/
     }
       printf("efwg");
   fflush(stdout);
-filtragem(&startp, 9, 2012,3, 5, 2);
+filtragem(&startc, 9, 2012,3, 5, 2);
   printf("1234");
   fflush(stdout);
    
-printlist(startp);
+printlist(startc);
   printf("1234");
   fflush(stdout);
 

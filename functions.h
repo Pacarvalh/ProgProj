@@ -12,7 +12,7 @@ void menuTemperaturas(  char _nomePais[], char _nomeCidade[]);
 void menuAnoAnalise(void);
 void menuGlobalAnalise(char _nomePais[], char _nomeCidade[]);
 void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao);
-void filtragem(node_t **_filtrar, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem,FILE * _pais,FILE *_cidade);
+void filtragem(node_t **_filtrar, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem,FILE * _pais,FILE *_cidade,int);
 void temperaturas(node_t *_temperaturas, int _idxTemperaturas,int _periodoAmostragem, char _nomeCidade[], char _nomePais[] );
 void anoAnalise(node_t *analise, int _idxAnoAnalise, int _anoPretendido, int _nCidades, int _nPaises);
 void globalAnalise(int _nMeses);
@@ -23,8 +23,8 @@ void ordenarLista(node_t *, node_t ****);
 node_t * separa(node_t *);
 node_t * merge(node_t *);
 node_t *junta(node_t *,node_t *);
-void printlist(node_t *,int,node_t *);
-void fazvec(node_t *,node_t *);
+void printlist(node_t *);
+
 
 
 #endif

@@ -17,7 +17,7 @@ void switchMenu(int argc, char *argv[])
     FILE *Cidades=NULL, *Paises=NULL;
     node_t * startc=NULL;
     node_t * startp=NULL;
-    node_t * vect[]=NULL;
+
 
 
     int modoImpressao;
@@ -27,9 +27,9 @@ Paises=fopen("tempcountries_short.csv","r");/*tempcountries.csv"*/
 
   /* receberDados(argc , argv, &Cidades, &Paises, modoImpressao); */  /* os files que ela muda sao os files a ser usados posteriormente*/
  getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
- // getfile(&startp,Paises,2);
-startp=merge(startp);
-fazvec(startc,vect);
+  getfile(&startp,Paises,2);
+startc=merge(startc);
+
   
 // merge(startp);
  
@@ -40,7 +40,8 @@ fazvec(startc,vect);
     }
       printf("efwg");
   fflush(stdout);
-filtragem(&startp, 3, 2012,3, 5, 1,Paises,Cidades);
+filtragem(&startc, 9, 2012,3, 5, 2,Paises,Cidades,2);
+filtragem(&startp, 9, 2012,3, 5, 2,Paises,Cidades,1);
   printf("1234");
   fflush(stdout);
    
@@ -216,10 +217,12 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
     
     auxi=getNewNode(data,Temperatura,incerto,pais,city,latitude,longitude,choi);
 
-  if(choi!=0) 
+  if(choi!=0 && **_start != NULL) 
   {   
     auxi->next = **_start;
+    
     auxi-> prev = NULL;
+    auxi->next->prev=auxi;
     **_start = auxi;
       
       if(**_start ==NULL)
@@ -230,6 +233,13 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
         
     }
   
+  }
+  else
+  {
+      **_start=auxi;
+
+
+
   }
    /*if(!**_start)
     **_start=auxi;
@@ -248,24 +258,6 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
 
 
 
-void fazvec(node_t * _head,node_t * _vect)
-{
-    node_t * aux = _head;
-    int i=0;
-    while (aux->next!=NULL)
-    {
-        _vect[i++]=aux;
-        while((strcmp(aux->prev->payload.pais,aux->payload.pais)==0)&& aux->next!=NULL)
-        {
-            aux=aux->next;
-        }
-        if(aux->next!=NULL)
-        {
-            aux->prev->next=NULL;
-            aux->prev=NULL;
-        }
-    }
-}
 
 
 void ordenarLista(node_t *newElem, node_t ****_start)
@@ -356,7 +348,7 @@ node_t * separa(node_t * _head)
    
 }
 
-void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem,FILE * _pais,FILE *_cidade) /* talvez usar lista newNodeliar*/
+void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem,FILE * _pais,FILE *_cidade,int choi) /* talvez usar lista newNodeliar*/
 { 
     node_t *aux=NULL;
     node_t *temp=NULL;
@@ -364,32 +356,54 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
 
     if(_idxFiltragem==1)
     {   printf("gk\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        getfile(_head,_pais,1);
-        //getfile(&_head,_cidade,2);
+        switch(choi){
+            case 1:
+                getfile(&_head,_pais,1);
+                *_head=merge(*_head);
+                break;
+            case 2:
+                getfile(&_head,_cidade,2);
+                break;
+        
+        }
     }    
     
 
     if(_idxFiltragem==2)
-    {
+    {   static int i=0;
         aux = *_head;
         printf("\ndentro da fil\n\n\n");
        
         while(aux->next!=NULL)
         {
-            
+            printf("%d\n\n",i++);
             if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
-            {  
+            {  printf("dentro");
                 if (aux==*_head){
+                    printf("if\n");
+                    fflush(stdout);
                     aux->next->prev=NULL;
                     *_head=aux->next;
                     
                     free(aux);
                 }
                 else{
+                    printf("else\n");
+                    fflush(stdout);
                 temp=aux->prev;
+                printf("1\n");
+                    fflush(stdout);
                 aux->next->prev=temp;
+                printf("2\n");
+                    fflush(stdout);
                 temp=aux->next;
+                printf("3\n");
+                    fflush(stdout);
                 aux->prev->next=temp;
+
+                printf("4\n");
+                                
+                    fflush(stdout);
                 free(aux);
 
                 }
@@ -401,10 +415,10 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
             printf("\nfinal while\n");
         }/* aux encontra- se no ultimo elemento*/
 
-        if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
+        /*if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
           {  aux->prev->next=NULL;
             free(aux);
-          }
+          }*/
 
         
     
@@ -450,31 +464,21 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
     }
 }
 
-void printlist(node_t *_start,int choi,node_t *_vect[])
+void printlist(node_t *_start)
 {   node_t * temp = (node_t *) malloc(sizeof(node_t));
     temp = _start;
-    node_t * aux=NULL;
 static int i=0;
-int j=0;
-    if (choi==2)
+
+    while( (temp->next!=NULL)/*&&(strcmp(temp->payload.pais,"Country")!=0)*/)
     {
-        while( (temp->next!=NULL || temp->next->next!=NULL )/*&&(strcmp(temp->payload.pais,"Country")!=0)*/)
+        printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
+        printf("%d\n",i++);
+        temp=temp->next;
+     
+       /* if(temp->next==NULL)
         {
-            printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
-        // printf("%d\n",i++);
-            temp=temp->next;
-            //printf("\n%d",i++);
-          
-        }  
-    } 
-    else if(choi==1)
-    {
-        while(_vect[j++]!=NULL)
-        {   aux = _vect[j];
-            while (aux->next=NULL)
-            {
-                printf("ano--%d  mes--%d  pais -- %s\n\n\n",temp->payload.dt.ano,temp->payload.dt.mes,aux->payload.pais);
-            }
-        }
-    }
+            break;
+        }*/
+    }  
+    
 }
