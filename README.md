@@ -17,3 +17,5 @@ Tem de se utilizar o ficheiro mais pequeno porque o sort demora imenso, agora a 
 
 Não percebo o porque de haver duas filtragens(menufiltragem e filtragem) (são os dois menus)
 
+ gcc *.c -g -I/usr/local/include -Wall -pedantic -std=c99 -L/usr/local/lib -lm -lSDL2 -lSDL2_ttf -lSDL2_image -o WarmingUp
+
