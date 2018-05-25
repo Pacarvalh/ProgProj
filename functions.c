@@ -92,14 +92,14 @@ void switchMenu(int argc, char *argv[])
             menuTemperaturas(&idxTemperaturas,&periodoAmostragem, nomePais, nomeCidade);
             switch(idxTemperaturas){
                 case 1:
-                    obterm(startp,"Mundo",periodoAmostragem);
+                   // obtermun(startp,"Mundo",periodoAmostragem);
                     break;
                 case 2:
-                    obterm(startp,nomePais,periodoAmostragem);
+                    obterpai(startp,nomePais,periodoAmostragem);
                    // printf("%d--%s\n\n",strlen(nomePais),("New York"));
                     break;
                 case 3:
-                    obterm(startc,nomeCidade,periodoAmostragem);
+                   // obtercii(startc,nomeCidade,periodoAmostragem);
                     break;
             }
             
@@ -847,7 +847,7 @@ void clearList(node_t ** _head)
     *_head=NULL;
 }
 
-void obterm(node_t *_head,char *_pais,int _periodo)
+void obterpai(node_t *_head,char *_pais,int _periodo)
 {   
     FILE * temps;
     node_t * aux = _head;
@@ -905,146 +905,121 @@ void obterm(node_t *_head,char *_pais,int _periodo)
     
     }
 }
-
-void jaseveonome(node_t *_head, int nMeses,int *temperaturaMaxima,int *temperaturaMinima char paisMaximo[], char paisMinimo[]) {
-{  
-    node_t *aux=_head;
-    node_t *temp=NULL;
-
-    int i=0, z=0, j=0,soma=0, media=0,int a=0, int b=0;
-    
-    while(aux->next!=NULL)
-    {
-        if(aux==_head && aux->next!=NULL;)
-        {
-            aux=aux->next;
-        }
-
-        if(strcmp(aux->payload->pais,aux->prev->payload.pais)!=0)
-        {
-             while(aux->payload->ano==aux->prev->payload->ano)
+/*
+void obtercii(node_t *_head,char *_cidade,int _periodo)
+{   
+    FILE * temps;
+    node_t * aux = _head;
+    int i=0,j=0;
+    printf("ddd\n");
+    fflush(stdout);
+    int anoini;
+    float contador=0,soma=0,media=0,max=0,min=9999;
+    while(aux!=NULL)
+    {   //printf("dentro do");
+        fflush(stdout);
+       // printf("%s\n\n\n\n\n\n\n\n",aux->payload.pais);
+        if(strcmp(aux->payload.cidade,_cidade)==0)
+        {   if(j==0){
+                anoini=aux->payload.dt.ano;
+                j=1;
+            }
+            soma += aux->payload.temperatura;
+            contador++;
+            if(aux->payload.temperatura>max)
             {
-                i++;
-                if(i>=_nMeses)
-                {
-                    temp=aux;
-                    while(j<=nMeses)
-                    {
-                        j++;
-                        vect[j-1]=aux->payload.temperatura;
-                        if(nMeses!=1){
-                        aux=aux->prev;
-                        }
-                    }
-                    j=0;
-                    aux=temp;
-                }
-                soma=0;
+                max=aux->payload.temperatura;
+                /*printf("max %f--",max);
+            }
+            if(aux->payload.temperatura<min)
+            {
+                min=aux->payload.temperatura;
+                
+            }
 
 
-                while(vect[z]!=NULL) /*talvez seja '\0*/
-                {
-                    soma+=vect[z];
-                    z++;     
-                }                   
-                if(vect[z]==NULL)
-                {
-                    media=(soma/(z+1);
-                    printf("%s --> temperatura média--> ano:%d --> %f\n",aux->payload->pais ,aux->payload->dt->ano, media);
-                    if(aux->payload.temperatura>temperaturaMaxima)
-                    {
-                        *temperaturaMaxima=aux->payload.temperatura;
-                        strcpy(paisMinimo,aux->payload.pais );
-                    }
-                    if(aux->payload.temperatura<temperaturaMinima)
-                    {
-                        *temperaturaMinima=aux->payload.temperatura;
-                        strcpy(paisMaximo,aux->payload.pais );
-                    }  
-
+            if(aux->payload.dt.ano==(anoini+_periodo))
+            {   //printf("dentro do\n\n\n\n");
+                media=(soma/contador);
+                if (i==0){
+                    temps=fopen("aaa.txt","w");
+                    fprintf(temps,"%s\n\n medias\nentre %d e %d   %.3f   %.3f    %.3f\n",_cidade,anoini,(anoini+_periodo),media,max,min);
+                    fclose(temps);
+                    i++;
                     
-                }     
-
-                
-                
-
-
-                z=0;
-            }
-
-        }
-
-        while(strmcp(aux->payload.pais=aux->prev->payload.pais==0)   
-        {   
-
-            a=0;
-
-
-            if(aux->payload.ano!=aux->prev->payload.ano)
-            {
-                vect[z]=aux->payload->temperatura;
-                aux=aux->next;
-            }
-
-            i=0;
-            while(aux->payload->ano==aux->prev->payload->ano)
-            {
-                i++;
-                if(i>=_nMeses)
-                {
-                    temp=aux;
-                    while(j<=nMeses)
-                    {
-                        j++;
-                        vect[j-1]=aux->payload.temperatura;
-                        if(nMeses!=1){
-                        aux=aux->prev;
-                        }
-                    }
-                    j=0;
-                    aux=temp;
                 }
-                soma=0;
-
-
-                while(vect[z]!=NULL) /*talvez seja '\0*/
-                {
-                    soma+=vect[z];
-                    z++;     
-                }                   
-                    if(vect[z]==NULL)
-                    {
-                        media=(soma/(z+1);
-                        vect2[a]=media;
-                        a++;
-                        printf("%s --> temperatura média--> ano:%d --> %f\n",aux->payload->pais ,aux->payload->dt->ano, media);
-                    if(aux->payload.temperatura>temperaturaMaxima)
-                    {
-                        *temperaturaMaxima=aux->payload.temperatura;
-                        strcpy(paisMinimo,aux->payload.pais );
-                    }
-                    if(aux->payload.temperatura<temperaturaMinima)
-                    {
-                        *temperaturaMinima=aux->payload.temperatura;
-                        strcpy(paisMaximo,aux->payload.pais );
-                    }     
-
-                
-
-
-                z=0;
-            }
-            b=0;
-            while(vect3[b]!=NULL)
-            {
-                mediaAno+=vect3[b];
-                aux->prev->payload.pais;
-                b++;
+                else 
+                {   temps=fopen("aaa.txt","a");
+                    fprintf(temps,"entre %d e %d   %.3f   %.3f   %.3f\n",anoini,(anoini+_periodo),media,max,min);
+                    fclose(temps);
+                    if(i++==19)
+                        break;
+                }
+                anoini+=_periodo;    
+                max=0;
+                min=9999;
             }
         }
-           printf("A média de temperatura de %s é: %d\n",aux->prev->payload.pais, mediaAno); 
-
+        aux=aux->next;
+    
     }
 }
+*/
+/*void obtermun(node_t *_head,int _periodo)
+{   
+    FILE * temps;
+    node_t * aux = _head;
+    int i=0,j=0;
+    printf("ddd\n");
+    fflush(stdout);
+    int anoini;
+    float contador=0,soma=0,media=0,max=0,min=9999;
+    while(aux!=NULL)
+    {   //printf("dentro do");
+        fflush(stdout);
+       // printf("%s\n\n\n\n\n\n\n\n",aux->payload.pais);
+        
+         
+                anoini=aux->payload.dt.ano;
+                j=1;
+            
+            soma += aux->payload.temperatura;
+            contador++;
+            if(aux->payload.temperatura>max)
+            {
+                max=aux->payload.temperatura;
+                
+            }
+            if(aux->payload.temperatura<min)
+            {
+                min=aux->payload.temperatura;
+              
+            }
 
+
+            if(aux->payload.dt.ano==(anoini+_periodo))
+            {   //printf("dentro do\n\n\n\n");
+                media=(soma/contador);
+                if (i==0){
+                    temps=fopen("aaa.txt","w");
+                    fprintf(temps,"%s\n\n medias\nentre %d e %d   %.3f   %.3f    %.3f\n","MUNDO",anoini,(anoini+_periodo),media,max,min);
+                    fclose(temps);
+                    i++;
+                    
+                }
+                else 
+                {   temps=fopen("aaa.txt","a");
+                    fprintf(temps,"entre %d e %d   %.3f   %.3f   %.3f\n",anoini,(anoini+_periodo),media,max,min);
+                    fclose(temps);
+                    if(i++==19)
+                        break;
+                }
+                anoini+=_periodo;    
+                max=0;
+                min=9999;
+            }
+        
+        aux=aux->next;
     
+    }
+}*/
