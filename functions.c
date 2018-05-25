@@ -10,19 +10,43 @@
 
 void switchMenu(int argc, char *argv[])
 {
-   
-    int idxMenu=1, idxFiltragem, idxAnoAnalise, idxGlobalAnalise, idxTemperaturas, fmes=0, fano=0, primeiroMes=0, ultimoMes=0, periodoAmostragem;
+    int i,a,b,c,d;
+    int idxMenu=1, idxFiltragem, idxAnoAnalise, idxGlobalAnalise, idxTemperaturas, fmes=0, fano=0, primeiroMes=0, ultimoMes=0, periodoAmostragem,anoPretendido,nCidades,nPaises,nMeses;
     char buff[SIZE_OF_STRING];
     char nomeCidade[SIZE_OF_STRING], nomePais[SIZE_OF_STRING];
     FILE *Cidades=NULL, *Paises=NULL;
     node_t * startc=NULL;
     node_t * startp=NULL;
     int modoImpressao;
-    Cidades=fopen("tempcities.csv","r");
-Paises=fopen("tempcountries_short.csv","r");
-   // receberDados(argc , argv, &Cidades, &Paises, modoImpressao);   /* os files que ela muda sao os files a ser usados posteriormente*/
-    getfile(&startc,Cidades,1);   /* falta preencher o primeiro parametro */
-   // getfile(&startp,Paises,2);
+    for(i=0;i<argc; i++)
+        {
+            if(strcmp(argv[i], "-f1")==0)
+                a=i+1;
+                Paises=fopen(argv[i],"r");
+
+            if(strcmp(argv[i], "-f2")==0)
+                b=i+1;
+                Cidades=fopen(argv[i],"r");
+            if(strcmp(argv[i],"-t")==0)
+                c=i;
+
+            if (strcmp(argv[i], "-g")==0)
+                d=1;
+
+            if(c==1 && d==1)
+            {
+                printf("Não é possivel abrir o modo textual e gráfico ao mesmo tempo");
+                exit(EXIT_FAILURE);
+            }
+
+        }
+
+    /*Cidades=fopen("tempcities_short.csv","r");
+    Paises=fopen("tempcountries_short.csv","r");*//*tempcountries.csv"*/
+    getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
+    getfile(&startp,Paises,2);
+    startp=merge(startp);
+    printlist(startp);
 
     while(1==1 )
     {
@@ -41,18 +65,18 @@ Paises=fopen("tempcountries_short.csv","r");
             break;
 
             case 3:
-            menuAnoAnalise(&idxAnoAnalise);
+            menuAnoAnalise(&idxAnoAnalise,&anoPretendido,&nCidades,&nPaises);
             break;
 
             case 4:
-            menuGlobalAnalise(&idxGlobalAnalise,&_nMeses, nomePais, nomeCidade);
+            menuGlobalAnalise(&idxGlobalAnalise,&nMeses, nomePais, nomeCidade);
 
             break;
 
-            case 5;
+            case 5:
 
             printf("O programa irá fechar agora.\n");
-            exit(EXIT_SUCESS);
+            exit(EXIT_SUCCESS);
             break;
         }
     }
@@ -74,9 +98,9 @@ int menuPrincipal(int *_idxMenu)
     return *_idxMenu;
 }
 
-void menuFiltragem(int *_idxFiltragem, int *_fmes, int *_fano,int *primeiroMes, int *ultimoMes )
+void menuFiltragem(int *_idxFiltragem, int *_fmes, int *_fano,int *_primeiroMes, int *_ultimoMes )
 {
-     int fmes=0, fano=0, primeiroMes=0, ultimoMes=0,
+     
     
     char buff[SIZE_OF_STRING];
     printf("Escolha com o correspondente o menu que pretende aceder. \n1.Limpar criterios. \n2.Escolhe um mes e um ano. todos os dados anteriores sao removidos. \n3. Escolhe 2 meses. todos os meses fora desse parametro serao removidos.\n");
@@ -139,10 +163,10 @@ void menuFiltragem(int *_idxFiltragem, int *_fmes, int *_fano,int *primeiroMes, 
         printf("Introduza agora o mês de valor superior\n");
          do{
             fgets(buff, SIZE_OF_STRING, stdin);
-            sscanf(buff, "%d", ultimoMes);
-            if(*_primeiroMes <1 || *_primeiroMes>12 || *_ultimoMes<1 || *_ultimoMes>12 || *_primeiroMes>ultimoMes)
+            sscanf(buff, "%d", _ultimoMes);
+            if(*_primeiroMes <1 || *_primeiroMes>12 || *_ultimoMes<1 || *_ultimoMes>12 || *_primeiroMes>*_ultimoMes)
                 printf("Introduza valores validos para o primeiro e último mês.\n");
-        }while(*_primeiroMes <1 || *_primeiroMes>12 || *_ultimoMes<1 || *_ultimoMes>12 || *_primeiroMes>ultimoMes);
+        }while(*_primeiroMes <1 || *_primeiroMes>12 || *_ultimoMes<1 || *_ultimoMes>12 || *_primeiroMes>*_ultimoMes);
 
     }
 }
@@ -185,51 +209,51 @@ void menuTemperaturas( int *_idxTemperaturas, int *_periodoAmostragem,char _nome
     
 }
 
-void menuAnoAnalise( int *_idxAnoAnalise,int *_anoPretendido,int *_nCidades, int *_nPaises;)
+void menuAnoAnalise( int *_idxAnoAnalise,int *_anoPretendido,int *_nCidades, int *_nPaises)
 {
     char buff[SIZE_OF_STRING];
-    int idxAnoAnalise,anoPretendido, nCidades, nPaises;
+    
     printf("Indique que ano pretende analisar. \n");
 
     do{
         fgets(buff, SIZE_OF_STRING, stdin);
-        sscanf(buff, "%d", &anoPretendido);
-        if(anoPretendido<1000 || anoPretendido>3000)
+        sscanf(buff, "%d", _anoPretendido);
+        if(*_anoPretendido<1000 || *_anoPretendido>3000)
             printf("Escolheu um inválido. Por favor introduza um entre 1000 e 3000.\n");  /* ir ver qual o ano maixmo e o ano minimo*/
           
-    }while(anoPretendido<1000 || anoPretendido>3000);
+    }while(*_anoPretendido<1000 || *_anoPretendido>3000);
     
     printf("Escolha agora o correspondente ao menu que pretende aceder. \n1.Analise por pais. \n2.Analise por cidade");
     do{
         fgets(buff, SIZE_OF_STRING, stdin);
-        sscanf(buff, "%d", &idxAnoAnalise);
-         if (idxAnoAnalise<1 || idxAnoAnalise>2)
+        sscanf(buff, "%d", _idxAnoAnalise);
+         if (*_idxAnoAnalise<1 || *_idxAnoAnalise>2)
          printf("Escolheu um inválido. Por favor introduza um valido positivo menor que 2.\n");
           
-    }while(idxAnoAnalise<1 || idxAnoAnalise>2);
+    }while(*_idxAnoAnalise<1 || *_idxAnoAnalise>2);
 
-    if(idxAnoAnalise==1)
+    if(*_idxAnoAnalise==1)
     {
         printf("Quantas cidades pretende analisar? \n");
         do{
             fgets(buff, SIZE_OF_STRING, stdin);
-            sscanf(buff, "%d", &nCidades);
-            if(nCidades<1 || nCidades>20)
+            sscanf(buff, "%d", _nCidades);
+            if(*_nCidades<1 || *_nCidades>20)
                  printf("Escolheu um inválido. Por favor introduza um número entre 1 e 20.\n");
           
-         }while(nCidades<1 || nCidades>20);
+         }while(*_nCidades<1 || *_nCidades>20);
     }
 
-    if(idxAnoAnalise==2)
+    if(*_idxAnoAnalise==2)
     {
         printf("Quantos paises pretende analisar? \n");
         do{
             fgets(buff, SIZE_OF_STRING, stdin);
-            sscanf(buff, "%d", &nPaises);
-            if(nPaises<1 || nPaises>20)
+            sscanf(buff, "%d", _nPaises);
+            if(*_nPaises<1 || *_nPaises>20)
                  printf("Escolheu um inválido. Por favor introduza um número entre 1 e 20.\n");
           
-         }while(nPaises<1 || nPaises>20);
+         }while(*_nPaises<1 || *_nPaises>20);
     }
 }
 
@@ -280,45 +304,124 @@ void menuGlobalAnalise( int *_idxGlobalAnalise, int *_nMeses,char _nomePais[], c
 }
 
  
-void filtragem(node_t **headpaises, node_t **headcities, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem) /* talvez usar lista newNodeliar*/
-{ 
+void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem,FILE * _pais,FILE *_cidade,int choi) /* talvez usar lista newNodeliar*/
+{   
     node_t *aux=NULL;
+    node_t *temp=NULL;
 
-    
-    
+
     if(_idxFiltragem==1)
-    {
-       /* getfile(node_t ** start_,FILE * file,1);*/  /* falta preencher o primeiro parametro */
-        /*getfile(node_t ** start_,FILE * file,2);*/
-    }
-    if(_idxFiltragem==2)
-    {
-        if(  (_filtrar->payload.dt.ano)  <  _fano)
-        {
-            aux = _filtrar;
-            free(aux);
+    {   printf("gk\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        switch(choi){
+            case 1:
+                getfile(&_head,_pais,1);
+                *_head=merge(*_head);
+                break;
+            case 2:
+                getfile(&_head,_cidade,2);
+                break;
+        
         }
+    }    
+    
 
-        if( (_filtrar->payload.dt.ano) == _fano && _filtrar->payload.dt.mes<_fmes)
+    if(_idxFiltragem==2)
+    {   static int i=0;
+        aux = *_head;
+        printf("\ndentro da fil\n\n\n");
+       
+        while(aux->next!=NULL)
         {
-            aux = _filtrar;
+            printf("%d\n\n",i++);
+            if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
+            {  printf("dentro");
+                if (aux==*_head){
+                    printf("if\n");
+                    fflush(stdout);
+                    aux->next->prev=NULL;
+                    *_head=aux->next;
+                    
+                    free(aux);
+                }
+                else{
+                    printf("else\n");
+                    fflush(stdout);
+                temp=aux->prev;
+                printf("1\n");
+                    fflush(stdout);
+                aux->next->prev=temp;
+                printf("2\n");
+                    fflush(stdout);
+                temp=aux->next;
+                printf("3\n");
+                    fflush(stdout);
+                aux->prev->next=temp;
+
+                printf("4\n");
+                                
+                    fflush(stdout);
+                free(aux);
+
+                }
+                
+                
+                
+            }
+            aux=aux->next;
+            printf("\nfinal while\n");
+        }/* aux encontra- se no ultimo elemento*/
+
+        /*if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
+          {  aux->prev->next=NULL;
             free(aux);
-        }
+          }*/
+
+        
+    
     }
 
     if(_idxFiltragem ==3)
     {
 
-        if(  (_filtrar ->payload.dt.mes)  <  (_primeiroMes) || (_filtrar ->payload.dt.mes)  >  (_ultimoMes)  )
-            {
-                aux = _filtrar;
+             aux = *_head;
+        
+       
+        while(aux->next!=NULL)
+        {
+            
+            if((aux->payload.dt.mes)  <  (_primeiroMes) || (aux ->payload.dt.mes)  >  (_ultimoMes) )
+            {  
+                if (aux==*_head){
+                    aux->next->prev=NULL;
+                    *_head=aux->next;
+                    
+                    free(aux);
+                }
+                else{
+                temp=aux->prev;
+                aux->next->prev=temp;
+                temp=aux->next;
+                aux->prev->next=temp;
                 free(aux);
-            }                
 
+                }
+                
+                
+                
+            }
+            aux=aux->next;
+            printf("\nfinal while\n");
+        }/* aux encontra- se no ultimo elemento*/
+
+        if((aux->payload.dt.mes)  <  (_primeiroMes) || (aux->payload.dt.mes)  >  (_ultimoMes) )
+          {  aux->prev->next=NULL;
+            free(aux);
+          }
     }
 }
 
-void temperaturas(node_t **headpaises, node_t **headcities, int idxTemperaturas,int periodoAmostragem,char _nomeCidade[], char _nomePais[] ) /* talvez usar lista */
+
+void temperaturas(node_t **head,int periodoAmostragem,char _nomeCidade[], char _nomePais[],int idxTemperaturas ) /* talvez usar lista */
 {
     
     node_t *aux=(node_t*) malloc(sizeof(node_t));
@@ -353,7 +456,7 @@ void temperaturas(node_t **headpaises, node_t **headcities, int idxTemperaturas,
     }
 }
 
-void anoAnalise(node_t **headpaises, node_t **headcities, int _idxAnoAnalise, int _anoPretendido, int _nCidades, int _nPaises) /* talvez usar lista newNodeliar e e ficheiro dos paises*/
+void anoAnalise(node_t **head, int _anoPretendido, int _nCidades, int _nPaises,int _idxAnoAnalise) /* talvez usar lista newNodeliar e e ficheiro dos paises*/
 {
     node_t *aux=(node_t*) malloc(sizeof(node_t));
     if(  (_analise->payload.dt.ano) != _anoPretendido)
@@ -378,7 +481,7 @@ void anoAnalise(node_t **headpaises, node_t **headcities, int _idxAnoAnalise, in
 
 }
 
-void globalAnalise(node_t **headpaises, node_t **headcities,int _nMeses)
+void globalAnalise(node_t **head,int _nMeses)
 {
 
 
