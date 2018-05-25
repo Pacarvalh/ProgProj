@@ -9,7 +9,7 @@ void switchMenu (int argc, char *argv[]);
 int menuPrincipal(int *_idxMenu);
 void menuFiltragem(int *,int*,int *,int *, int *);
 void menuTemperaturas(int *,int *,  char _nomePais[], char _nomeCidade[]);
-void menuAnoAnalise(int *,int *,int*,int *);
+void menuAnoAnalise(int *,int *,int*);
 void menuGlobalAnalise(int *,int *,char _nomePais[], char _nomeCidade[]);
 void receberDados(int argc , char * argv[], FILE **Cidade, FILE **Paises, int *modoImpressao);
 void filtragem(node_t **_filtrar, int _fmes, int _fano, int _primeiroMes, int _ultimoMes, int _idxFiltragem,FILE * _pais,FILE *_cidade,int);
@@ -26,7 +26,11 @@ node_t *junta(node_t *,node_t *);
 void printlist(node_t *);
 int removehead(node_t ** _head);
 void clearList(node_t ** _head);
-void obterm(node_t *_head,char *_pais,int _periodo);
+void obterpai(node_t *_head,char *_pais,int _periodo);
+void obtercii(node_t *_head,char *_pais,int _periodo);
+void obtermun(node_t *_head,int _periodo);
+void Nelementospais(node_t *head,int _anoPretendido,int N);
+void Nelementoscidade(node_t *head,int _anoPretendido,int N);
 
 
 #endif

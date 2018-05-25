@@ -18,6 +18,7 @@ void switchMenu(int argc, char *argv[])
     node_t * startc=NULL;
     node_t * startp=NULL;
     int modoImpressao;
+    int N;
     for(i=0;i<argc; i++)
         {
             if(strcmp(argv[i], "-f1")==0)
@@ -47,7 +48,7 @@ void switchMenu(int argc, char *argv[])
     getfile(&startp,Paises,2);
     startp=merge(startp);
                    // printlist(startp);
-               printlist(startc);
+             // printlist(startc);
 
 
     while(idxMenu!=5 )
@@ -90,23 +91,35 @@ void switchMenu(int argc, char *argv[])
             case 2:
              
             menuTemperaturas(&idxTemperaturas,&periodoAmostragem, nomePais, nomeCidade);
+            
             switch(idxTemperaturas){
                 case 1:
-                   // obtermun(startp,"Mundo",periodoAmostragem);
+                   obtermun(startp,periodoAmostragem);
                     break;
                 case 2:
                     obterpai(startp,nomePais,periodoAmostragem);
                    // printf("%d--%s\n\n",strlen(nomePais),("New York"));
                     break;
                 case 3:
-                   // obtercii(startc,nomeCidade,periodoAmostragem);
+                    
+                    obtercii(startc,nomeCidade,periodoAmostragem);
+                  
                     break;
             }
             
             break;
 
             case 3:
-            menuAnoAnalise(&idxAnoAnalise,&anoPretendido,&nCidades,&nPaises);
+            menuAnoAnalise(&idxAnoAnalise,&anoPretendido,&N);
+            switch(idxAnoAnalise){
+                case 1:
+                    Nelementospais(startp,anoPretendido,N);
+                    break;
+                case 2:
+                 Nelementoscidade(startc,anoPretendido,N);
+                 break;
+            }
+           
             break;
 
             case 4:
@@ -244,14 +257,15 @@ void menuTemperaturas( int *_idxTemperaturas, int *_periodoAmostragem,char _nome
 
     if(*_idxTemperaturas==3)
     {
-        printf("Que pais pretende analisar?\n");
-        fgets(buff, SIZE_OF_STRING, stdin);
-        /*sscanf(buff, "%s", _nomeCidade);*/   /* rpeciso fazer com q a funcao diga q foi escolhido cidade e nao pais*/
+        printf("Que cidade pretende analisar?\n");
+        fgets(_nomeCidade, SIZE_OF_STRING, stdin);
+        /*sscanf(buff, "%s", _nomeCidade);*/
+        _nomeCidade[strcspn(_nomeCidade,"\n")]='\0';  /* rpeciso fazer com q a funcao diga q foi escolhido cidade e nao pais*/
     }
     
 }
 
-void menuAnoAnalise( int *_idxAnoAnalise,int *_anoPretendido,int *_nCidades, int *_nPaises)
+void menuAnoAnalise( int *_idxAnoAnalise,int *_anoPretendido,int *_n)
 {
     char buff[SIZE_OF_STRING];
     
@@ -274,29 +288,17 @@ void menuAnoAnalise( int *_idxAnoAnalise,int *_anoPretendido,int *_nCidades, int
           
     }while(*_idxAnoAnalise<1 || *_idxAnoAnalise>2);
 
-    if(*_idxAnoAnalise==1)
-    {
+    
         printf("Quantas cidades pretende analisar? \n");
         do{
             fgets(buff, SIZE_OF_STRING, stdin);
-            sscanf(buff, "%d", _nCidades);
-            if(*_nCidades<1 || *_nCidades>20)
+            sscanf(buff, "%d", _n);
+            if(*_n<1 || *_n>20)
                  printf("Escolheu um inválido. Por favor introduza um número entre 1 e 20.\n");
           
-         }while(*_nCidades<1 || *_nCidades>20);
-    }
-
-    if(*_idxAnoAnalise==2)
-    {
-        printf("Quantos paises pretende analisar? \n");
-        do{
-            fgets(buff, SIZE_OF_STRING, stdin);
-            sscanf(buff, "%d", _nPaises);
-            if(*_nPaises<1 || *_nPaises>20)
-                 printf("Escolheu um inválido. Por favor introduza um número entre 1 e 20.\n");
-          
-         }while(*_nPaises<1 || *_nPaises>20);
-    }
+         }while(*_n<1 || *_n>20);
+    
+    
 }
 
 void menuGlobalAnalise( int *_idxGlobalAnalise, int *_nMeses,char _nomePais[], char _nomeCidade[])
@@ -458,40 +460,7 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
 }
 
 
-void temperaturas(node_t **_head,int _periodoAmostragem,char _nomeCidade[], char _nomePais[],int _idxTemperaturas ) /* talvez usar lista */
-{
-    
-    node_t *aux=(node_t*) malloc(sizeof(node_t));
-    
-    if (_idxTemperaturas==1)
-    {
 
-        /* funcao que faz o tabela cm medias etc etc para todos os paises*/
-    }
-    if (_idxTemperaturas==2)
-    {
-        aux = *_head;
-
-        if(strcmp(_nomePais ,aux->payload.pais)!=0)
-            free(aux);
-
-
-        /* funcao que faz o tabela ja cm as medias etc etc para um pais especifico mas so e preciso invocar a funcao pq a lista ja foi reduzida para apenas esse pais especifico*/
-
-    }
-
-    if (_idxTemperaturas==3)
-    {
-        aux = *_head;
-
-        if(strcmp(_nomePais,aux->payload.cidade)!=0)
-            free(aux);    
-        
-        /*funcao que faz os graficos com as medias etc etc para uma cidade especifica*/
-        
-
-    }
-}
 
 void anoAnalise(node_t **_head, int _anoPretendido, int _nCidades, int _nPaises,int _idxAnoAnalise) /* talvez usar lista newNodeliar e e ficheiro dos paises*/
 {
@@ -856,6 +825,11 @@ void obterpai(node_t *_head,char *_pais,int _periodo)
     fflush(stdout);
     int anoini;
     float contador=0,soma=0,media=0,max=0,min=9999;
+    if(_periodo<=5)
+    {
+        printf("Introduza um periodo de amostragem superior a 5\n\n");
+        return;
+    }
     while(aux!=NULL)
     {   //printf("dentro do");
         fflush(stdout);
@@ -877,9 +851,9 @@ void obterpai(node_t *_head,char *_pais,int _periodo)
                 min=aux->payload.temperatura;
                 printf("%f\n",min);
             }
+            
 
-
-            if(aux->payload.dt.ano==(anoini+_periodo))
+            if(aux->payload.dt.ano=(anoini+_periodo))
             {   //printf("dentro do\n\n\n\n");
                 media=(soma/contador);
                 if (i==0){
@@ -905,31 +879,44 @@ void obterpai(node_t *_head,char *_pais,int _periodo)
     
     }
 }
-/*
+
 void obtercii(node_t *_head,char *_cidade,int _periodo)
 {   
     FILE * temps;
     node_t * aux = _head;
+    while(aux->next!=NULL)
+    {
+        aux=aux->next;
+    }
     int i=0,j=0;
     printf("ddd\n");
     fflush(stdout);
     int anoini;
     float contador=0,soma=0,media=0,max=0,min=9999;
+    if(_periodo<=5)
+    {
+        printf("Introduza um periodo de amostragem superior a 5\n\n");
+        return;
+    }
+   
     while(aux!=NULL)
     {   //printf("dentro do");
         fflush(stdout);
        // printf("%s\n\n\n\n\n\n\n\n",aux->payload.pais);
         if(strcmp(aux->payload.cidade,_cidade)==0)
-        {   if(j==0){
+        {    
+            if(j==0){
                 anoini=aux->payload.dt.ano;
+                printf("%d",anoini);
                 j=1;
             }
             soma += aux->payload.temperatura;
             contador++;
             if(aux->payload.temperatura>max)
-            {
+            {   
                 max=aux->payload.temperatura;
-                /*printf("max %f--",max);
+                
+               
             }
             if(aux->payload.temperatura<min)
             {
@@ -942,6 +929,7 @@ void obtercii(node_t *_head,char *_cidade,int _periodo)
             {   //printf("dentro do\n\n\n\n");
                 media=(soma/contador);
                 if (i==0){
+                    printf("ffefe");
                     temps=fopen("aaa.txt","w");
                     fprintf(temps,"%s\n\n medias\nentre %d e %d   %.3f   %.3f    %.3f\n",_cidade,anoini,(anoini+_periodo),media,max,min);
                     fclose(temps);
@@ -960,28 +948,30 @@ void obtercii(node_t *_head,char *_cidade,int _periodo)
                 min=9999;
             }
         }
-        aux=aux->next;
+        aux=aux->prev;
     
     }
 }
-*/
-/*void obtermun(node_t *_head,int _periodo)
+
+void obtermun(node_t *_head,int _periodo)
 {   
     FILE * temps;
     node_t * aux = _head;
     int i=0,j=0;
-    printf("ddd\n");
+    printf("MUNDI\n");
     fflush(stdout);
     int anoini;
     float contador=0,soma=0,media=0,max=0,min=9999;
+     anoini=aux->payload.dt.ano;
+    if(_periodo<=5)
+    {
+        printf("Introduza um periodo de amostragem superior a 5\n\n");
+        return;
+    }
     while(aux!=NULL)
-    {   //printf("dentro do");
+    {  
         fflush(stdout);
        // printf("%s\n\n\n\n\n\n\n\n",aux->payload.pais);
-        
-         
-                anoini=aux->payload.dt.ano;
-                j=1;
             
             soma += aux->payload.temperatura;
             contador++;
@@ -997,7 +987,7 @@ void obtercii(node_t *_head,char *_cidade,int _periodo)
             }
 
 
-            if(aux->payload.dt.ano==(anoini+_periodo))
+            if(aux->payload.dt.ano>=(anoini+_periodo))
             {   //printf("dentro do\n\n\n\n");
                 media=(soma/contador);
                 if (i==0){
@@ -1022,4 +1012,161 @@ void obtercii(node_t *_head,char *_cidade,int _periodo)
         aux=aux->next;
     
     }
-}*/
+}
+
+void Nelementospais(node_t *head,int _anoPretendido,int N)
+{
+    node_t *aux =NULL;
+    aux=head;
+    float max=-2000, min=1000, tmax=1000, tmin=-2000;
+    int i,j,compara=0;
+    char maximo[SIZE_OF_STRING]="";
+    char minimo[SIZE_OF_STRING]="";
+    char escolhidosmax[20][100];
+    char escolhidosmin[20][100];
+    for(i=0;i<N;i++)
+    {  aux=head;
+        max=-2000;
+        min=1000;
+
+        fflush(stdout);
+        while(aux->next!=NULL)
+        {  // printf("WHILE\n");
+            if(aux->payload.dt.ano==_anoPretendido)
+            {   
+               // printf("anocerto\n\n");
+                if(aux->payload.temperatura>max && aux->payload.temperatura<tmax)
+                {   compara=0;
+                    for(j=0;j<i;j++)
+                    {
+                        if(strcmp(escolhidosmax[j],aux->payload.pais)==0)
+                            compara=1;
+                    }
+                    if(compara!=1){
+                    max=aux->payload.temperatura;
+                    strcpy( maximo, aux->payload.pais);
+                    }
+                  //  printf("%s ---> %f\n",maximo,max);
+
+                   
+
+                }
+
+                if(aux->payload.temperatura<min && aux->payload.temperatura>tmin)
+                {   
+                    compara=0;
+                    for(j=0;j<i;j++)
+                    {
+                        if(strcmp(escolhidosmin[j],aux->payload.pais)==0)
+                            compara=1;
+                    }
+                    if(compara!=1){
+                    min=aux->payload.temperatura;
+                    strcpy( minimo, aux->payload.pais);
+                    }
+                    //printf("%s ---> %f\n",minimo,min);
+
+
+                }
+
+
+            }
+            aux=aux->next;
+        }
+        tmax=max;
+        tmin=min;
+
+         //printf("for\n");
+        // printf("%f\n\n\n\n\n",max);
+        strcpy(escolhidosmax[i],maximo);
+        strcpy(escolhidosmin[i],minimo);
+      printf("min-->  %f --> %s  max--> %f  pais--> %s\n\n",min, minimo,max, maximo);
+
+    }
+
+}
+
+void Nelementoscidade(node_t *head,int _anoPretendido,int N)
+{
+    node_t *aux =NULL;
+    aux=head;
+    float max=-2000, min=1000, tmax=1000, tmin=-2000;
+    int i,j,compara=0;
+    char maximo[SIZE_OF_STRING]="";
+    char minimo[SIZE_OF_STRING]="";
+    char escolhidosmax[20][100];
+    char escolhidosmin[20][100];
+    for(i=0;i<N;i++)
+    {  aux=head;
+        max=-2000;
+        min=1000;
+
+        fflush(stdout);
+        while(aux->next!=NULL)
+        {  // printf("WHILE\n");
+            if(aux->payload.dt.ano==_anoPretendido)
+            {   
+               // printf("anocerto\n\n");
+                if(aux->payload.temperatura>max && aux->payload.temperatura<tmax)
+                {   compara=0;
+                    for(j=0;j<i;j++)
+                    {
+                        if(strcmp(escolhidosmax[j],aux->payload.cidade)==0)
+                            compara=1;
+                    }
+                    if(compara!=1){
+                    max=aux->payload.temperatura;
+                    strcpy( maximo, aux->payload.cidade);
+                    }
+                  //  printf("%s ---> %f\n",maximo,max);
+
+                   
+
+                }
+
+                if(aux->payload.temperatura<min && aux->payload.temperatura>tmin)
+                {   
+                    compara=0;
+                    for(j=0;j<i;j++)
+                    {
+                        if(strcmp(escolhidosmin[j],aux->payload.cidade)==0)
+                            compara=1;
+                    }
+                    if(compara!=1){
+                    min=aux->payload.temperatura;
+                    strcpy( minimo, aux->payload.cidade);
+                    }
+                    //printf("%s ---> %f\n",minimo,min);
+
+
+                }
+
+
+            }
+            aux=aux->next;
+        }
+        tmax=max;
+        tmin=min;
+
+         //printf("for\n");
+        // printf("%f\n\n\n\n\n",max);
+        strcpy(escolhidosmax[i],maximo);
+        strcpy(escolhidosmin[i],minimo);
+      //printf("min-->  %f --> %s  max--> %f  pais--> %s\n\n",min, minimo,max, maximo);
+
+    }
+    printf("As %d cidades mais frias em %d:\n",N,_anoPretendido);
+    for(i=0;i<N;i++)
+    {
+        
+        printf("%s\n",escolhidosmin[i]); 
+    }
+    printf("\n\n\n"); 
+    printf("As %d cidades mais quentes em %d:\n",N,_anoPretendido);
+    for(i=0;i<N;i++)
+    {
+        
+        printf("%s\n",escolhidosmax[i]); 
+    }
+    printf("\n\n\n"); 
+}
