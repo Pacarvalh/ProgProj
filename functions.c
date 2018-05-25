@@ -871,3 +871,146 @@ void obterm(node_t *_head,char *_pais,int _periodo)
     
     }
 }
+
+void jaseveonome(node_t *_head, int nMeses,int *temperaturaMaxima,int *temperaturaMinima char paisMaximo[], char paisMinimo[]) {
+{  
+    node_t *aux=_head;
+    node_t *temp=NULL;
+
+    int i=0, z=0, j=0,soma=0, media=0,int a=0, int b=0;
+    
+    while(aux->next!=NULL)
+    {
+        if(aux==_head && aux->next!=NULL;)
+        {
+            aux=aux->next;
+        }
+
+        if(strcmp(aux->payload->pais,aux->prev->payload.pais)!=0)
+        {
+             while(aux->payload->ano==aux->prev->payload->ano)
+            {
+                i++;
+                if(i>=_nMeses)
+                {
+                    temp=aux;
+                    while(j<=nMeses)
+                    {
+                        j++;
+                        vect[j-1]=aux->payload.temperatura;
+                        if(nMeses!=1){
+                        aux=aux->prev;
+                        }
+                    }
+                    j=0;
+                    aux=temp;
+                }
+                soma=0;
+
+
+                while(vect[z]!=NULL) /*talvez seja '\0*/
+                {
+                    soma+=vect[z];
+                    z++;     
+                }                   
+                if(vect[z]==NULL)
+                {
+                    media=(soma/(z+1);
+                    printf("%s --> temperatura média--> ano:%d --> %f\n",aux->payload->pais ,aux->payload->dt->ano, media);
+                    if(aux->payload.temperatura>temperaturaMaxima)
+                    {
+                        *temperaturaMaxima=aux->payload.temperatura;
+                        strcpy(paisMinimo,aux->payload.pais );
+                    }
+                    if(aux->payload.temperatura<temperaturaMinima)
+                    {
+                        *temperaturaMinima=aux->payload.temperatura;
+                        strcpy(paisMaximo,aux->payload.pais );
+                    }  
+
+                    
+                }     
+
+                
+                
+
+
+                z=0;
+            }
+
+        }
+
+        while(strmcp(aux->payload.pais=aux->prev->payload.pais==0)   
+        {   
+
+            a=0;
+
+
+            if(aux->payload.ano!=aux->prev->payload.ano)
+            {
+                vect[z]=aux->payload->temperatura;
+                aux=aux->next;
+            }
+
+            i=0;
+            while(aux->payload->ano==aux->prev->payload->ano)
+            {
+                i++;
+                if(i>=_nMeses)
+                {
+                    temp=aux;
+                    while(j<=nMeses)
+                    {
+                        j++;
+                        vect[j-1]=aux->payload.temperatura;
+                        if(nMeses!=1){
+                        aux=aux->prev;
+                        }
+                    }
+                    j=0;
+                    aux=temp;
+                }
+                soma=0;
+
+
+                while(vect[z]!=NULL) /*talvez seja '\0*/
+                {
+                    soma+=vect[z];
+                    z++;     
+                }                   
+                    if(vect[z]==NULL)
+                    {
+                        media=(soma/(z+1);
+                        vect2[a]=media;
+                        a++;
+                        printf("%s --> temperatura média--> ano:%d --> %f\n",aux->payload->pais ,aux->payload->dt->ano, media);
+                    if(aux->payload.temperatura>temperaturaMaxima)
+                    {
+                        *temperaturaMaxima=aux->payload.temperatura;
+                        strcpy(paisMinimo,aux->payload.pais );
+                    }
+                    if(aux->payload.temperatura<temperaturaMinima)
+                    {
+                        *temperaturaMinima=aux->payload.temperatura;
+                        strcpy(paisMaximo,aux->payload.pais );
+                    }     
+
+                
+
+
+                z=0;
+            }
+            b=0;
+            while(vect3[b]!=NULL)
+            {
+                mediaAno+=vect3[b];
+                aux->prev->payload.pais;
+                b++;
+            }
+        }
+           printf("A média de temperatura de %s é: %d\n",aux->prev->payload.pais, mediaAno); 
+
+    }
+}
+
+    
