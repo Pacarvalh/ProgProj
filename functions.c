@@ -46,8 +46,8 @@ void switchMenu(int argc, char *argv[])
     getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
     getfile(&startp,Paises,2);
     startp=merge(startp);
-                    printlist(startp);
-                printlist(startc);
+               //     printlist(startp);
+               // printlist(startc);
 
 
     while(1==1 )
@@ -57,7 +57,9 @@ void switchMenu(int argc, char *argv[])
         switch (idxMenu)
         {
             case 1:
+            
             menuFiltragem(&idxFiltragem, &fmes, &fano, &primeiroMes, &ultimoMes);  
+            
             if(idxFiltragem==1)
             {   clearList(&startp);
                 clearList(&startc);
@@ -86,8 +88,9 @@ void switchMenu(int argc, char *argv[])
             break;
 
             case 2:
+             
             menuTemperaturas(&idxTemperaturas,&periodoAmostragem, nomePais, nomeCidade);
-
+            obterm(startp,"New York",10);
             break;
 
             case 3:
@@ -826,4 +829,45 @@ void clearList(node_t ** _head)
         aux=temp;
     }
     *_head=NULL;
+}
+
+void obterm(node_t *_head,char *_pais,int _periodo)
+{   FILE * temps;
+    node_t * aux = _head;
+    int i=0;
+    
+    int anoini=aux->payload.dt.ano;
+    float contador=0,soma=0,media=0;
+    while(aux!=NULL)
+    {   //printf("dentro do");
+        fflush(stdout);
+        //printf("%d\n%d\n\n\n\n\n\n\n",strlen(aux->payload.pais),strlen(_pais));
+        if(strcmp(aux->payload.pais,_pais)==0)
+        {   
+            soma += aux->payload.temperatura;
+            contador++;
+
+            if(aux->payload.dt.ano==(anoini+_periodo))
+            {   //printf("dentro do\n\n\n\n");
+                media=(soma/contador);
+                if (i==0){
+                    temps=fopen("aaa.txt","w");
+                    fprintf(temps,"%s\n\n medias\n entre %d e %d---%.3f\n",_pais,anoini,(anoini+_periodo),media);
+                    fclose(temps);
+                    i++;
+                }
+                else 
+                {   temps=fopen("aaa.txt","a");
+                    fprintf(temps,"entre %d e %d---%.3f\n",anoini,(anoini+_periodo),media);
+                    fclose(temps);
+                    if(i++==19)
+                        break;
+                }
+                anoini+=_periodo;    
+
+            }
+        }
+        aux=aux->next;
+    
+    }
 }

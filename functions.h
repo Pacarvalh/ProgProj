@@ -26,6 +26,7 @@ node_t *junta(node_t *,node_t *);
 void printlist(node_t *);
 int removehead(node_t ** _head);
 void clearList(node_t ** _head);
+void obterm(node_t *_head,char *_pais,int _periodo);
 
 
 #endif
