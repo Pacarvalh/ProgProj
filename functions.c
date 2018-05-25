@@ -46,7 +46,9 @@ void switchMenu(int argc, char *argv[])
     getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
     getfile(&startp,Paises,2);
     startp=merge(startp);
-    printlist(startp);
+                    printlist(startp);
+                printlist(startc);
+
 
     while(1==1 )
     {
@@ -55,8 +57,32 @@ void switchMenu(int argc, char *argv[])
         switch (idxMenu)
         {
             case 1:
-            menuFiltragem(&idxFiltragem, &fmes, &fano, &primeiroMes, &ultimoMes);                      
-                   
+            menuFiltragem(&idxFiltragem, &fmes, &fano, &primeiroMes, &ultimoMes);  
+            if(idxFiltragem==1)
+            {   clearList(&startp);
+                clearList(&startc);
+
+
+               // printlist(startc);
+                getfile(&startp,Paises,2);
+                                printf("badjoras2");
+                fflush(stdout);
+                
+                startp=merge(startp);
+                                printf("badjoras3");
+                fflush(stdout);
+                
+                getfile(&startc,Cidades,1);
+                printf("badjoras4");
+                fflush(stdout);
+
+                printlist(startp);
+            
+            }
+      
+            filtragem(&startp, fmes, fano, primeiroMes, ultimoMes,idxFiltragem,Paises,Cidades,2); 
+            filtragem(&startc, fmes, fano, primeiroMes, ultimoMes,idxFiltragem,Paises,Cidades,1);                        
+            //printlist(startc);
             break;
 
             case 2:
@@ -310,56 +336,51 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
     node_t *temp=NULL;
 
 
-    if(_idxFiltragem==1)
-    {   printf("gk\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        switch(choi){
-            case 1:
-                getfile(&_head,_pais,1);
+    /*if(_idxFiltragem==1)
+    {   
+         switch(choi){
+            case 2:
+                getfile(&_head,_pais,2);
                 *_head=merge(*_head);
                 break;
-            case 2:
-                getfile(&_head,_cidade,2);
+            case 1:
+                getfile(&_head,_cidade,1);
                 break;
         
         }
-    }    
+    }  */  
     
 
     if(_idxFiltragem==2)
     {   static int i=0;
         aux = *_head;
-        printf("\ndentro da fil\n\n\n");
+        
        
         while(aux->next!=NULL)
         {
             printf("%d\n\n",i++);
             if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
-            {  printf("dentro");
+            {  
                 if (aux==*_head){
-                    printf("if\n");
-                    fflush(stdout);
+                   
                     aux->next->prev=NULL;
                     *_head=aux->next;
                     
                     free(aux);
                 }
                 else{
-                    printf("else\n");
-                    fflush(stdout);
+                  
                 temp=aux->prev;
-                printf("1\n");
-                    fflush(stdout);
+                
                 aux->next->prev=temp;
-                printf("2\n");
-                    fflush(stdout);
+               
                 temp=aux->next;
-                printf("3\n");
-                    fflush(stdout);
+              
                 aux->prev->next=temp;
 
-                printf("4\n");
+                
                                 
-                    fflush(stdout);
+                  
                 free(aux);
 
                 }
@@ -368,7 +389,7 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
                 
             }
             aux=aux->next;
-            printf("\nfinal while\n");
+         
         }/* aux encontra- se no ultimo elemento*/
 
         /*if((aux->payload.dt.ano)  <  _fano || (aux->payload.dt.ano) == _fano && aux->payload.dt.mes<_fmes)
@@ -421,21 +442,21 @@ void filtragem(node_t **_head, int _fmes, int _fano, int _primeiroMes, int _ulti
 }
 
 
-void temperaturas(node_t **head,int periodoAmostragem,char _nomeCidade[], char _nomePais[],int idxTemperaturas ) /* talvez usar lista */
+void temperaturas(node_t **_head,int _periodoAmostragem,char _nomeCidade[], char _nomePais[],int _idxTemperaturas ) /* talvez usar lista */
 {
     
     node_t *aux=(node_t*) malloc(sizeof(node_t));
     
-    if (idxTemperaturas==1)
+    if (_idxTemperaturas==1)
     {
 
         /* funcao que faz o tabela cm medias etc etc para todos os paises*/
     }
-    if (idxTemperaturas==2)
+    if (_idxTemperaturas==2)
     {
-        aux = _temperaturas;
+        aux = *_head;
 
-        if(strcmp(_nomePais ,_temperaturas->payload.pais)!=0)
+        if(strcmp(_nomePais ,aux->payload.pais)!=0)
             free(aux);
 
 
@@ -443,11 +464,11 @@ void temperaturas(node_t **head,int periodoAmostragem,char _nomeCidade[], char _
 
     }
 
-    if (idxTemperaturas==3)
+    if (_idxTemperaturas==3)
     {
-        aux = _temperaturas;
+        aux = *_head;
 
-        if(strcmp(_nomePais,_temperaturas->payload.cidade)!=0)
+        if(strcmp(_nomePais,aux->payload.cidade)!=0)
             free(aux);    
         
         /*funcao que faz os graficos com as medias etc etc para uma cidade especifica*/
@@ -456,12 +477,13 @@ void temperaturas(node_t **head,int periodoAmostragem,char _nomeCidade[], char _
     }
 }
 
-void anoAnalise(node_t **head, int _anoPretendido, int _nCidades, int _nPaises,int _idxAnoAnalise) /* talvez usar lista newNodeliar e e ficheiro dos paises*/
+void anoAnalise(node_t **_head, int _anoPretendido, int _nCidades, int _nPaises,int _idxAnoAnalise) /* talvez usar lista newNodeliar e e ficheiro dos paises*/
 {
     node_t *aux=(node_t*) malloc(sizeof(node_t));
-    if(  (_analise->payload.dt.ano) != _anoPretendido)
+    aux = *_head;
+    if(  (aux->payload.dt.ano) != _anoPretendido)
     {
-        aux = _analise;
+        
         free(aux); 
 
     }
@@ -481,10 +503,327 @@ void anoAnalise(node_t **head, int _anoPretendido, int _nCidades, int _nPaises,i
 
 }
 
-void globalAnalise(node_t **head,int _nMeses)
+void globalAnalise(node_t **_head,int _nMeses)
 {
+}
+
+
+node_t *getNewNode(char *data,float Temperatura,float incerto,char *pais,char *city, char *lati, char *longi,int choi) /* novos valores preciso colocar nas estruturas*/
+{
+    node_t * newNode = (node_t*) malloc(sizeof(node_t));
+    char s[SIZE_OF_STRING]="-";
+    //char a[SIZE_OF_STRING]="",b[SIZE_OF_STRING]="",c[SIZE_OF_STRING]="";
+    int a,b,c;
+    a=atoi(strtok(data,s));
+    b=atoi(strtok(NULL,s));
+    c=atoi(strtok(NULL,s));
+        
+     
+    if(newNode==NULL)
+    {
+        printf("memory allocation error \n");
+        exit(EXIT_FAILURE);
+    }
+ 
+   
+    newNode->payload.dt.ano=a;
+    newNode->payload.dt.mes=b;
+    newNode->payload.dt.dia=c;
+    newNode->payload.temperatura=Temperatura;
+    newNode->payload.incerteza=incerto;
+    strcpy(newNode->payload.pais,pais);
+   // printf("")
+    if (choi==1){ /*só entra se estiver na cidade,fica definido que a escolha 1 é cidade*/
+        strcpy(newNode->payload.cidade,city);
+        strcpy(newNode->payload.lat,lati);
+        strcpy(newNode->payload.longit,longi);
+    }
+    newNode->next = NULL;
+    newNode->prev = NULL;
+
+    
+    return newNode;
+}
+
+
+void getfile(node_t ** start_,FILE * file,int choi)
+{   char buffer[SIZE_OF_STRING];
+    int i=0;
+    
+     fgets(buffer,SIZE_OF_STRING,file);  
+     //fgets(buffer,SIZE_OF_STRING,file); 
+    while(fgets(buffer,SIZE_OF_STRING,file))
+    {  
+        switch (choi)
+        {   case 1:
+               
+                putCity(buffer,&start_,choi);
+                
+                break;
+                /* o q e q e suposto fazer?*/
+            case 2:
+               
+                putCity(buffer,&start_,choi);/*Não te preocupes com o nome estar ser putCity, a funçao dá para os dois*/
+                 
+               
+                break;
+        }
+    }
+    
 
 
 }
 
 
+node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, entra na lista, se der return a 0 nao entra na lista */
+{   node_t *auxi =(node_t *) malloc(sizeof(node_t));
+    char * comma = _buff;
+    float Temperatura,incerto;
+    char pais[SIZE_OF_STRING]="",city[SIZE_OF_STRING]="", latitude[ SIZE_OF_STRING] = "", longitude [SIZE_OF_STRING] = "";
+    char au[SIZE_OF_STRING]="";
+    char data[SIZE_OF_STRING]="";
+    static int i=0;
+    long int tam = strcspn(comma,",\n");
+    strncpy(data,comma,tam);
+    comma+=tam+1;
+     
+
+    if ((*comma)==',')
+    {
+        Temperatura=NONTEMP;
+        return 0;   
+    }
+    else 
+    {   tam = strcspn(comma,",\n");
+        strncpy(au,comma,tam);
+        Temperatura = atof(au);
+        comma+=tam+1;
+        if(Temperatura > 70 || Temperatura < -70 )
+            return 0;
+
+    }
+    if ((*comma)==',')
+    {   incerto=NONTEMP;
+        comma++; 
+            return 0;  
+    }
+    else
+    {
+        tam = strcspn(comma,",\n");
+        strncpy(au,comma,tam);
+        incerto = atof(au);
+        comma+=tam+1;
+        /* verificar valor aceitavel */
+        if(incerto > 3)
+        return 0;
+    }
+    if ((*comma)==',')
+    {   strcpy(pais,NONST);
+        comma++;
+        return 0;
+    }
+    else 
+    {   
+        tam = strcspn(comma,",\n");
+        strncpy(pais,comma,tam);
+        comma+=tam+1;
+
+    }
+    if ((*comma)==',')
+    {   strcpy(city,NONST);
+        comma++;
+        return 0;
+    }
+    else
+    {
+        tam = strcspn(comma,",\n");
+        strncpy(city,comma,tam);
+        comma+=tam+1;
+        
+    }
+
+        
+    
+    tam = strcspn(comma,",\n");
+    strncpy(latitude,comma,tam);
+    comma+=tam+1;
+
+    tam = strcspn(comma,",\n");
+    strncpy(longitude,comma,tam);
+    comma+=tam+1;
+    /*printf("%d\n\n",i++);*/
+    if(strcmp(pais,"country")==0)
+        return 0;
+
+   //printf("177\n");
+    
+    auxi=getNewNode(data,Temperatura,incerto,pais,city,latitude,longitude,choi);
+    
+  if(choi!=0 && **_start != NULL) 
+  {   
+    auxi->next = **_start;
+    
+    auxi-> prev = NULL;
+    auxi->next->prev=auxi;
+    **_start = auxi;
+      
+      if(**_start ==NULL)
+    {
+        **_start = auxi;
+        auxi->prev = NULL;
+        auxi -> next = NULL;
+        
+    }
+  
+  }
+  else
+  {
+      **_start=auxi;
+
+
+
+  }
+   /*if(!**_start)
+    **_start=auxi;
+    else
+    {
+        auxi->next=**_start;
+        auxi->next->prev=auxi;
+        **_start=auxi;
+
+
+    }  */
+ 
+    return  **_start;        /*verificar numero de  ** */
+}
+
+
+
+
+
+
+void ordenarLista(node_t *newElem, node_t ****_start)
+{   static int i=0;
+    node_t * current;
+    //printf("safef");
+    //printf("%d",i++);*/
+    if ((i++)==50 ||i==1000 ||i==5000|| i==10000 || i==40000)
+        printf("%d\n",i);
+   if(***_start==NULL)
+        ***_start=newElem;
+    else if((***_start)->payload.dt.ano>newElem->payload.dt.ano || ((***_start)->payload.dt.ano==newElem->payload.dt.ano && (***_start)->payload.dt.mes>newElem->payload.dt.mes))
+    {
+        newElem->next = ***_start;
+        newElem->next->prev=newElem;
+        ***_start=newElem;
+    }
+
+    else{
+        current = ***_start;
+        while (current->next !=NULL && (current->next->payload.dt.ano<newElem->payload.dt.ano|| (current->next->payload.dt.ano==newElem->payload.dt.ano && current->next->payload.dt.mes<newElem->payload.dt.mes)))
+            current = current->next;
+
+        newElem->next = current->next;
+
+        if (current->next!=NULL)
+            newElem->next->prev = newElem;
+        
+        current->next = newElem;
+        newElem->prev = current;
+    }
+}
+
+
+node_t * junta(node_t * a,node_t * b)
+{
+    node_t * jajuntas = NULL;
+    //static int i=0;
+    //printf("\n%d\n",i++);
+    if(a==NULL)
+        return b;
+    if (b==NULL)
+        return a;
+    if((a)->payload.dt.ano<b->payload.dt.ano || (a->payload.dt.ano==b->payload.dt.ano && a->payload.dt.mes<b->payload.dt.mes))
+    {
+        a->next=junta(a->next,b);
+        a->next->prev=a;
+        a->prev=NULL;
+        return a;
+    }
+    else
+    {    b->next=junta(a,b->next);
+        b->next->prev=b;
+        b->prev=NULL;
+        return b;
+       
+    }
+    
+
+}
+
+node_t * merge(node_t * _start)
+{
+    static int i=0;
+    if ((i++)==50 ||i==1000 ||i==5000|| i==10000 || i==40000)
+        printf("%d\n",i);
+    if(!_start||!_start->next)
+        return _start;
+
+    node_t * second = separa(_start);
+    _start=merge(_start);
+    second=merge(second);
+    return junta(_start,second);
+}
+
+node_t * separa(node_t * _head)
+{
+   node_t * rapido=_head,*lento=_head;
+  
+    while(rapido->next && rapido->next->next)
+    {
+        rapido = rapido->next->next;
+        lento=lento->next;
+    }
+    node_t * temp = lento->next;
+    lento->next=NULL;
+    return temp;
+   
+}
+
+
+void printlist(node_t *_start)
+{   node_t * temp = (node_t *) malloc(sizeof(node_t));
+    temp = _start;
+    static int i=0;
+
+    while( (temp->next!=NULL)/*&&(strcmp(temp->payload.pais,"Country")!=0)*/)
+    {
+        printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
+        printf("%d\n",i++);
+        temp=temp->next;
+     
+       /* if(temp->next==NULL)
+        {
+            break;
+        }*/
+    }  
+    
+}
+
+
+
+
+
+void clearList(node_t ** _head)
+{
+    node_t * aux=NULL;
+    node_t * temp=NULL;
+    aux=*_head;
+    while(aux!=NULL)
+    {
+        temp=aux->next;
+        free(aux);
+        aux=temp;
+    }
+    *_head=NULL;
+}

@@ -24,7 +24,8 @@ node_t * separa(node_t *);
 node_t * merge(node_t *);
 node_t *junta(node_t *,node_t *);
 void printlist(node_t *);
-
+int removehead(node_t ** _head);
+void clearList(node_t ** _head);
 
 
 #endif
