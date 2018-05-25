@@ -11,7 +11,7 @@
 void switchMenu(int argc, char *argv[])
 {
     int i,a,b,c,d;
-    int idxMenu=1, idxFiltragem, idxAnoAnalise, idxGlobalAnalise, idxTemperaturas, fmes=0, fano=0, primeiroMes=0, ultimoMes=0, periodoAmostragem,anoPretendido,nCidades,nPaises,nMeses;
+    int idxMenu=0, idxFiltragem, idxAnoAnalise, idxGlobalAnalise, idxTemperaturas, fmes=0, fano=0, primeiroMes=0, ultimoMes=0, periodoAmostragem,anoPretendido,nCidades,nPaises,nMeses;
     char buff[SIZE_OF_STRING];
     char nomeCidade[SIZE_OF_STRING], nomePais[SIZE_OF_STRING];
     FILE *Cidades=NULL, *Paises=NULL;
@@ -46,11 +46,11 @@ void switchMenu(int argc, char *argv[])
     getfile(&startc,Cidades,1);  /* falta preencher o primeiro parametro */
     getfile(&startp,Paises,2);
     startp=merge(startp);
-               //     printlist(startp);
-               // printlist(startc);
+                   // printlist(startp);
+               printlist(startc);
 
 
-    while(1==1 )
+    while(idxMenu!=5 )
     {
        
         menuPrincipal(&idxMenu);
@@ -90,7 +90,19 @@ void switchMenu(int argc, char *argv[])
             case 2:
              
             menuTemperaturas(&idxTemperaturas,&periodoAmostragem, nomePais, nomeCidade);
-            obterm(startp,"New York",10);
+            switch(idxTemperaturas){
+                case 1:
+                    obterm(startp,"Mundo",periodoAmostragem);
+                    break;
+                case 2:
+                    obterm(startp,nomePais,periodoAmostragem);
+                   // printf("%d--%s\n\n",strlen(nomePais),("New York"));
+                    break;
+                case 3:
+                    obterm(startc,nomeCidade,periodoAmostragem);
+                    break;
+            }
+            
             break;
 
             case 3:
@@ -225,15 +237,16 @@ void menuTemperaturas( int *_idxTemperaturas, int *_periodoAmostragem,char _nome
     if(*_idxTemperaturas==2)
     {
         printf("Que pais pretende analisar?\n");
-        fgets(buff, SIZE_OF_STRING, stdin);
-        sscanf(buff, "%s", _nomePais);    /* preciso fazer com q a funcao diga q foi escolhido pais e nao cidade*/
+        fgets(_nomePais, SIZE_OF_STRING, stdin);
+       // sscanf(buff, "%s", _nomePais); 
+        _nomePais[strcspn(_nomePais,"\n")]='\0' ; /* preciso fazer com q a funcao diga q foi escolhido pais e nao cidade*/
     }
 
     if(*_idxTemperaturas==3)
     {
         printf("Que pais pretende analisar?\n");
         fgets(buff, SIZE_OF_STRING, stdin);
-        sscanf(buff, "%s", _nomeCidade);   /* rpeciso fazer com q a funcao diga q foi escolhido cidade e nao pais*/
+        /*sscanf(buff, "%s", _nomeCidade);*/   /* rpeciso fazer com q a funcao diga q foi escolhido cidade e nao pais*/
     }
     
 }
@@ -621,26 +634,26 @@ node_t *putCity(char * _buff,node_t *** _start,int choi)  /* se der return a 1, 
         return 0;
     }
     if ((*comma)==',')
-    {   strcpy(pais,NONST);
+    {   strcpy(city,NONST);
         comma++;
         return 0;
     }
     else 
     {   
         tam = strcspn(comma,",\n");
-        strncpy(pais,comma,tam);
+        strncpy(city,comma,tam);
         comma+=tam+1;
 
     }
     if ((*comma)==',')
-    {   strcpy(city,NONST);
+    {   strcpy(pais,NONST);
         comma++;
         return 0;
     }
     else
     {
         tam = strcspn(comma,",\n");
-        strncpy(city,comma,tam);
+        strncpy(pais,comma,tam);
         comma+=tam+1;
         
     }
@@ -801,8 +814,11 @@ void printlist(node_t *_start)
 
     while( (temp->next!=NULL)/*&&(strcmp(temp->payload.pais,"Country")!=0)*/)
     {
-        printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
-        printf("%d\n",i++);
+       // printf("ano--%d  mes--%d\n\n",temp->payload.dt.ano,temp->payload.dt.mes);
+       // printf("%d\n",i++);
+       printf("pais--%s",temp->payload.pais);
+       printf("--cidade--%s\n\n",temp->payload.cidade);
+
         temp=temp->next;
      
        /* if(temp->next==NULL)
@@ -832,39 +848,57 @@ void clearList(node_t ** _head)
 }
 
 void obterm(node_t *_head,char *_pais,int _periodo)
-{   FILE * temps;
+{   
+    FILE * temps;
     node_t * aux = _head;
-    int i=0;
-    
-    int anoini=aux->payload.dt.ano;
-    float contador=0,soma=0,media=0;
+    int i=0,j=0;
+    printf("ddd\n");
+    fflush(stdout);
+    int anoini;
+    float contador=0,soma=0,media=0,max=0,min=9999;
     while(aux!=NULL)
     {   //printf("dentro do");
         fflush(stdout);
-        //printf("%d\n%d\n\n\n\n\n\n\n",strlen(aux->payload.pais),strlen(_pais));
+       // printf("%s\n\n\n\n\n\n\n\n",aux->payload.pais);
         if(strcmp(aux->payload.pais,_pais)==0)
-        {   
+        {   if(j==0){
+                anoini=aux->payload.dt.ano;
+                j=1;
+            }
             soma += aux->payload.temperatura;
             contador++;
+            if(aux->payload.temperatura>max)
+            {
+                max=aux->payload.temperatura;
+                printf("max %f--",max);
+            }
+            if(aux->payload.temperatura<min)
+            {
+                min=aux->payload.temperatura;
+                printf("%f\n",min);
+            }
+
 
             if(aux->payload.dt.ano==(anoini+_periodo))
             {   //printf("dentro do\n\n\n\n");
                 media=(soma/contador);
                 if (i==0){
                     temps=fopen("aaa.txt","w");
-                    fprintf(temps,"%s\n\n medias\n entre %d e %d---%.3f\n",_pais,anoini,(anoini+_periodo),media);
+                    fprintf(temps,"%s\n\n medias\nentre %d e %d   %.3f   %.3f    %.3f\n",_pais,anoini,(anoini+_periodo),media,max,min);
                     fclose(temps);
                     i++;
+                    
                 }
                 else 
                 {   temps=fopen("aaa.txt","a");
-                    fprintf(temps,"entre %d e %d---%.3f\n",anoini,(anoini+_periodo),media);
+                    fprintf(temps,"entre %d e %d   %.3f   %.3f   %.3f\n",anoini,(anoini+_periodo),media,max,min);
                     fclose(temps);
                     if(i++==19)
                         break;
                 }
                 anoini+=_periodo;    
-
+                max=0;
+                min=9999;
             }
         }
         aux=aux->next;
